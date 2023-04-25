@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingApi-Service", "BowlingApi-Service\BowlingApi-Service.csproj", "{87FE6D04-6ECB-4761-92DA-238EE065E0B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingData", "BowlingData\BowlingData.csproj", "{CC5FFD9B-EEC4-4807-8B26-B393879A5E2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingModel", "BowlingModel\BowlingModel.csproj", "{DCFBD87E-069C-43F3-9356-779A48CDFF54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{87FE6D04-6ECB-4761-92DA-238EE065E0B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87FE6D04-6ECB-4761-92DA-238EE065E0B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87FE6D04-6ECB-4761-92DA-238EE065E0B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC5FFD9B-EEC4-4807-8B26-B393879A5E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5FFD9B-EEC4-4807-8B26-B393879A5E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5FFD9B-EEC4-4807-8B26-B393879A5E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5FFD9B-EEC4-4807-8B26-B393879A5E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCFBD87E-069C-43F3-9356-779A48CDFF54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCFBD87E-069C-43F3-9356-779A48CDFF54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCFBD87E-069C-43F3-9356-779A48CDFF54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCFBD87E-069C-43F3-9356-779A48CDFF54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
