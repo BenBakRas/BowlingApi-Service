@@ -7,8 +7,4 @@
     <RootNamespace>BowlingApi_Service</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="BusinessLogicLayer\" />
-  </ItemGroup>
-
 </Project>

@@ -6,8 +6,4 @@
 		<ImplicitUsings>true</ImplicitUsings>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <Folder Include="DatabaseLayer\" />
-	</ItemGroup>
-
 </Project>
