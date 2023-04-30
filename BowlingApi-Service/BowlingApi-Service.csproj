@@ -7,4 +7,14 @@
     <RootNamespace>BowlingApi_Service</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\" />
+    <Folder Include="ModelConversion\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ShModels\ShModel\ShModel.csproj" />
+    <ProjectReference Include="..\BowlingData\BowlingData.csproj" />
+  </ItemGroup>
+
 </Project>
