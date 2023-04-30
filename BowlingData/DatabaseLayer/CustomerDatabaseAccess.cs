@@ -22,7 +22,7 @@ namespace BowlingData.DatabaseLayer
         {
             _connectionString = inConnectionString;
         }
-        public int CreateaCustomer(Customer aCustomer)
+        public int CreateCustomer(Customer aCustomer)
         {
             int insertedId = -1;
             //
@@ -98,7 +98,7 @@ namespace BowlingData.DatabaseLayer
             return foundCustomer;
         }
 
-        public bool UpdateCustomer(Customer customerToUpdate)
+        public bool UpdateCustomer(Customer CustomerToUpdate)
         {
             throw new NotImplementedException();
         }
@@ -120,6 +120,8 @@ namespace BowlingData.DatabaseLayer
             foundCustomer = new Customer(tempId, tempFirstName, tempLastName, tempEmail, tempPhone);
             return foundCustomer;
         }
+
+     
     }
 
 }
