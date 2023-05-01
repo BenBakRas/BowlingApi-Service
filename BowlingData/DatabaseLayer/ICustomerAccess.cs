@@ -7,10 +7,10 @@ using ShModel;
 
 namespace BowlingData.DatabaseLayer
 {
-    public interface ICustomerDatabaseAccess
+    public interface ICustomerAccess
     {
         Customer GetCustomerById(int id);
-        List<Customer> GetPersonAll();
+        List<Customer> GetAllCustomers();
         int CreateCustomer(Customer aCustomer);
         bool UpdateCustomer(Customer CustomerToUpdate);
         bool DeleteCustomerById(int id);

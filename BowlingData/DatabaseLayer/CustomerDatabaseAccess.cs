@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BowlingData.DatabaseLayer
 {
-    public class CustomerDatabaseAccess : ICustomerDatabaseAccess
+    public class CustomerDatabaseAccess : ICustomerAccess
     {
 
         readonly string? _connectionString;
@@ -26,7 +26,7 @@ namespace BowlingData.DatabaseLayer
         {
             int insertedId = -1;
             //
-            string insertString = "insert into Customer(firstName, lastName, email, phone) OUTPUT INSERTED.ID values(@FirstName, @LastName, @Email, @Phone)";
+            string insertString = "insert into Customer(FirstName, LastName, Email, Phone) OUTPUT INSERTED.ID values(@FirstName, @LastName, @Email, @Phone)";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand CreateCommand = new SqlCommand(insertString, con))
             {
@@ -52,11 +52,11 @@ namespace BowlingData.DatabaseLayer
             throw new NotImplementedException();
         }
 
-        public List<Customer> GetPersonAll()
+        public List<Customer> GetAllCustomers()
         {
             List<Customer> foundCustomers;
             Customer readCustomer;
-            string queryString = "";
+            string queryString = "select Id, FirstName, LastName, Email, Phone from Customer";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
@@ -78,7 +78,7 @@ namespace BowlingData.DatabaseLayer
         {
             Customer foundCustomer;
             //
-            string queryString = "select id, firstName, lastName, email, phone from Customer where id = @Id";
+            string queryString = "select Id, FirstName, LastName, Email, Phone from Customer where Id = @Id";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
