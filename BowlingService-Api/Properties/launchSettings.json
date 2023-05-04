@@ -4,17 +4,17 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:6535",
-      "sslPort": 44373
+      "applicationUrl": "http://localhost:60234",
+      "sslPort": 44312
     }
   },
   "profiles": {
-    "BowlingApi_Service": {
+    "BowlingService_Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "api/customers",
-      "applicationUrl": "https://localhost:7069;http://localhost:5048",
+      "launchUrl": "weatherforecast",
+      "applicationUrl": "https://localhost:7046;http://localhost:5148",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

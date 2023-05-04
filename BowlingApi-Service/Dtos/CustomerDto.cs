@@ -10,10 +10,7 @@
             LastName = inLastName;
             Email = inEmail;
             Phone = inPhone;
-
-
         }
-
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Email { get; set; }
@@ -23,7 +20,7 @@
         {
             get
             {
-                return FullName;
+                return $"{FirstName} {LastName}";
             }
         }
 

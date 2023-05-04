@@ -38,7 +38,7 @@ namespace BowlingApi_Service.ModelConversion
             return aCustomerReadDto;
         }
 
-        // Convert from CustomerDTO object to Person object
+        // Convert from CustomerDTO object to customer object
         public static Customer? ToCustomer(CustomerDto inDto)
         {
             Customer? aCustomer = null;

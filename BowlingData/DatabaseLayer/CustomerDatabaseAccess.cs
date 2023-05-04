@@ -26,7 +26,7 @@ namespace BowlingData.DatabaseLayer
         {
             int insertedId = -1;
             //
-            string insertString = "insert into Customer(FirstName, LastName, Email, Phone) OUTPUT INSERTED.ID values(@FirstName, @LastName, @Email, @Phone)";
+            string insertString = "insert into Customer(firstName, lastName, email, phone) OUTPUT INSERTED.ID values(@FirstName, @LastName, @Email, @Phone)";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand CreateCommand = new SqlCommand(insertString, con))
             {
