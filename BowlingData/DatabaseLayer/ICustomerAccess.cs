@@ -12,7 +12,7 @@ namespace BowlingData.DatabaseLayer
         Customer GetCustomerById(int id);
         List<Customer> GetAllCustomers();
         int CreateCustomer(Customer aCustomer);
-        bool UpdateCustomer(Customer CustomerToUpdate);
+        bool UpdateCustomer(Customer customerToUpdate);
         bool DeleteCustomerById(int id);
     }
 }

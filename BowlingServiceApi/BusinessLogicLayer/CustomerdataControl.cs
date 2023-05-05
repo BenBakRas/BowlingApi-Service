@@ -1,16 +1,15 @@
-﻿using BowlingApi_Service.Dtos;
-using BowlingData;
+﻿using CustomerService.DTOs;
+using ShModel;
 using BowlingData.DatabaseLayer;
-using BowlingData.ModelLayer;
+using System;
 
-namespace BowlingApi_Service.BusinessLogicLayer
+namespace CustomerService.BusinessLogicLayer
 {
-    public class CustomerdataControl : ICustomerdata
+    public class CustomerdataControl : ICustomerData
     {
         private readonly ICustomerAccess _customerAccess;
-
-        public CustomerdataControl(ICustomerAccess inCustomerAccess)
-        {
+        public CustomerdataControl(ICustomerAccess inCustomerAccess) 
+        { 
             _customerAccess = inCustomerAccess;
         }
 
@@ -37,12 +36,12 @@ namespace BowlingApi_Service.BusinessLogicLayer
             throw new NotImplementedException();
         }
 
-        public CustomerDto? Get(int matchingId)
+        public CustomerDto? Get(int id)
         {
             CustomerDto? foundCustomerDto;
             try
             {
-                Customer? foundCustomer = _customerAccess.GetCustomerById(matchingId);
+                Customer? foundCustomer = _customerAccess.GetCustomerById(id);
                 foundCustomerDto = ModelConversion.CustomerDtoConvert.FromCustomer(foundCustomer);
             }
             catch

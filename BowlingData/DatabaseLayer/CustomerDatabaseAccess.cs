@@ -35,10 +35,10 @@ namespace BowlingData.DatabaseLayer
                 CreateCommand.Parameters.Add(fNameParam);
                 SqlParameter lNameParam = new("@LastName", aCustomer.LastName);
                 CreateCommand.Parameters.Add(lNameParam);
-                SqlParameter mEmailParam = new("@Email", aCustomer.Email);
-                CreateCommand.Parameters.Add(mEmailParam);
-                SqlParameter mPhoneParam = new("@Phone", aCustomer.Phone);
-                CreateCommand.Parameters.Add(mPhoneParam);
+                SqlParameter EmailParam = new("@Email", aCustomer.Email);
+                CreateCommand.Parameters.Add(EmailParam);
+                SqlParameter phoneParam = new("Phone", aCustomer.Phone);
+                CreateCommand.Parameters.Add(phoneParam);
                 //
                 con.Open();
                 // Execute save and read generated key (ID)
@@ -56,14 +56,15 @@ namespace BowlingData.DatabaseLayer
         {
             List<Customer> foundCustomers;
             Customer readCustomer;
-            string queryString = "select Id, FirstName, LastName, Email, Phone from Customer";
+            //
+            string queryString = "select id, firstName, lastName, email, phone from Customer";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
                 con.Open();
-                //Executes read
+                // Execute read
                 SqlDataReader customerReader = readCommand.ExecuteReader();
-                //Collects data
+                // Collect data
                 foundCustomers = new List<Customer>();
                 while (customerReader.Read())
                 {
@@ -74,16 +75,16 @@ namespace BowlingData.DatabaseLayer
             return foundCustomers;
         }
 
-        public Customer GetCustomerById(int findId)
+        public Customer GetCustomerById(int id)
         {
             Customer foundCustomer;
             //
-            string queryString = "select Id, FirstName, LastName, Email, Phone from Customer where Id = @Id";
+            string queryString = "select id, firstName, lastName, email, phone from Customer where id = @Id";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
                 // Prepace SQL
-                SqlParameter idParam = new SqlParameter("@Id", findId);
+                SqlParameter idParam = new SqlParameter("@Id", id);
                 readCommand.Parameters.Add(idParam);
                 //
                 con.Open();
@@ -98,30 +99,29 @@ namespace BowlingData.DatabaseLayer
             return foundCustomer;
         }
 
-        public bool UpdateCustomer(Customer CustomerToUpdate)
+        public bool UpdateCustomer(Customer customerToUpdate)
         {
             throw new NotImplementedException();
         }
 
-        private Customer GetCustomerFromReader(SqlDataReader personReader)
+
+        private Customer GetCustomerFromReader(SqlDataReader customerReader)
         {
             Customer foundCustomer;
             int tempId;
-            string tempPhone;
-            string tempFirstName, tempLastName;
-            string tempEmail;
+            string tempFirstName, tempLastName, tempEmail, tempPhone;
             // Fetch values
-            tempId = personReader.GetInt32(personReader.GetOrdinal("Id"));
-            tempFirstName = personReader.GetString(personReader.GetOrdinal("firstName"));
-            tempLastName = personReader.GetString(personReader.GetOrdinal("lastName"));
-            tempEmail = personReader.GetString(personReader.GetOrdinal("email"));
-            tempPhone = personReader.GetString(personReader.GetOrdinal("phone"));
+            tempId = customerReader.GetInt32(customerReader.GetOrdinal("id"));
+            tempFirstName = customerReader.GetString(customerReader.GetOrdinal("firstName"));
+            tempLastName = customerReader.GetString(customerReader.GetOrdinal("lastName"));
+            tempEmail = customerReader.GetString(customerReader.GetOrdinal("email"));
+            tempPhone = customerReader.GetString(customerReader.GetOrdinal("phone"));
             // Create object
             foundCustomer = new Customer(tempId, tempFirstName, tempLastName, tempEmail, tempPhone);
             return foundCustomer;
         }
 
-     
+
     }
 
 }

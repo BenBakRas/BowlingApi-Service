@@ -1,9 +1,7 @@
-﻿using System;
-using BowlingData;
-using BowlingApi_Service.Dtos;
+﻿using BowlingApiService.DTOs;
 using ShModel;
 
-namespace BowlingApi_Service.ModelConversion
+namespace BowlingApiService.ModelConversion
 {
     public class CustomerDtoConvert
     {
@@ -49,8 +47,4 @@ namespace BowlingApi_Service.ModelConversion
             return aCustomer;
         }
     }
-
-
-
 }
-

@@ -1,12 +1,12 @@
-﻿using System;
-using BowlingData;
-using BowlingApi_Service.Dtos;
+﻿using CustomerService.DTOs;
 using ShModel;
+using System;
 
-namespace BowlingApi_Service.ModelConversion
+namespace CustomerService.ModelConversion
 {
     public class CustomerDtoConvert
     {
+
         // Convert from Customer objects to CustomerDto objects
         public static List<CustomerDto>? FromCustomerCollection(List<Customer> inCustomers)
         {
@@ -49,8 +49,4 @@ namespace BowlingApi_Service.ModelConversion
             return aCustomer;
         }
     }
-
-
-
 }
-

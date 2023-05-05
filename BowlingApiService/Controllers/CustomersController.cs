@@ -1,20 +1,17 @@
-﻿using BowlingApi_Service.BusinessLogicLayer;
+﻿using BowlingApiService.BusinessLogicLayer;
+using BowlingApiService.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BowlingApi_Service.Dtos;
-using System.Reflection.Metadata.Ecma335;
-using BowlingData.DatabaseLayer;
-using ShModel;
 
-namespace BowlingApi_Service.Controllers
+namespace BowlingApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly ICustomerdata _businessLogicCtrl;
+        private readonly ICustomerData _businessLogicCtrl;
 
-        public CustomersController(ICustomerdata inBusinessLogicCtrl)
+        public CustomersController(ICustomerData inBusinessLogicCtrl)
         {
             _businessLogicCtrl = inBusinessLogicCtrl;
         }
@@ -80,5 +77,4 @@ namespace BowlingApi_Service.Controllers
             return foundReturn;
         }
     }
-
 }
