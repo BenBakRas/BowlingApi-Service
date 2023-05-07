@@ -1,6 +1,6 @@
 using Xunit.Abstractions;
 using BowlingData.DatabaseLayer;
-using BowlingData.ModelLayer;
+using ShModel;
 using System;
 
 namespace BowlingDataTest
@@ -18,9 +18,10 @@ namespace BowlingDataTest
             _extraOutput = output;
             _CustomerAccess = new CustomerDatabaseAccess(_connectionString);
         }
+      
 
         [Fact]
-        public void TestGetAllCustoemrs()
+        public void TestGetAllCusomers()
         {
             // Arrange
 
@@ -33,7 +34,6 @@ namespace BowlingDataTest
             // Assert
             Assert.True(customersWereRead);
         }
-
 
     }
 }

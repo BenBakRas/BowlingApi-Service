@@ -7,28 +7,26 @@ namespace BowlingApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class LanesController : ControllerBase
     {
-        private readonly ICustomerData _businessLogicCtrl;
-
-        public CustomersController(ICustomerData inBusinessLogicCtrl)
+        private readonly ILaneData _businessLogicCtrl;
+        public LanesController(ILaneData inBusinessLogicCtrl) 
         {
             _businessLogicCtrl = inBusinessLogicCtrl;
         }
 
-        // URL: api/customers
         [HttpGet]
-        public ActionResult<List<CustomerDto>> Get()
+        public ActionResult<List<LaneDto>> Get()
         {
-            ActionResult<List<CustomerDto>> foundReturn;
+            ActionResult<List<LaneDto>> foundReturn;
             // retrieve data - converted to DTO
-            List<CustomerDto>? foundCustomers = _businessLogicCtrl.Get();
+            List<LaneDto>? foundLanes = _businessLogicCtrl.Get();
             // evaluate
-            if (foundCustomers != null)
+            if (foundLanes != null)
             {
-                if (foundCustomers.Count > 0)
+                if (foundLanes.Count > 0)
                 {
-                    foundReturn = Ok(foundCustomers);                 // Statuscode 200
+                    foundReturn = Ok(foundLanes);                 // Statuscode 200
                 }
                 else
                 {
@@ -46,15 +44,15 @@ namespace BowlingApiService.Controllers
 
         // URL: api/customers/{id}
         [HttpGet, Route("{id}")]
-        public ActionResult<CustomerDto> Get(int id)
+        public ActionResult<LaneDto> Get(int id)
         {
-            ActionResult<CustomerDto> foundReturn;
+            ActionResult<LaneDto> foundReturn;
             // retrieve data - converted to DTO
-            CustomerDto? foundCustomer = _businessLogicCtrl.Get(id);
+            LaneDto? foundLane = _businessLogicCtrl.Get(id);
             // evaluate
-            if (foundCustomer != null)
+            if (foundLane != null)
             {
-                foundReturn = Ok(foundCustomer);       // Statuscode 200
+                foundReturn = Ok(foundLane);       // Statuscode 200
             }
             else
             {
@@ -66,13 +64,13 @@ namespace BowlingApiService.Controllers
 
         // URL: api/customers
         [HttpPost]
-        public ActionResult<int> PostNewCustomer(CustomerDto inCustomerDto)
+        public ActionResult<int> PostNewLane(LaneDto inLaneDto)
         {
             ActionResult<int> foundReturn;
             int insertedId = -1;
-            if (inCustomerDto != null)
+            if (inLaneDto != null)
             {
-                insertedId = _businessLogicCtrl.Add(inCustomerDto);
+                insertedId = _businessLogicCtrl.Add(inLaneDto);
             }
             // Evaluate
             if (insertedId > 0)
@@ -107,40 +105,5 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-        // URL: api/customers/{id}
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] CustomerDto updatedCustomerDto)
-        {
-            
-            if (updatedCustomerDto == null)
-            {
-                return BadRequest();    // Bad request, missing input
-            }
-
-            // Retrieve the existing customer details
-            CustomerDto? existingCustomerDto = _businessLogicCtrl.Get(id);
-
-            if (existingCustomerDto == null)
-            {
-                return NotFound();    // Customer not found
-            }
-
-            // Update the existing customer details with the new values
-            existingCustomerDto.FirstName = updatedCustomerDto.FirstName;
-            existingCustomerDto.LastName = updatedCustomerDto.LastName;
-            existingCustomerDto.Email = updatedCustomerDto.Email;
-            existingCustomerDto.Phone = updatedCustomerDto.Phone;
-
-            bool isUpdated = _businessLogicCtrl.Put(existingCustomerDto);
-            if (isUpdated)
-            {
-                return Ok(isUpdated);     // Statuscode 200
-            }
-            else
-            {
-                return StatusCode(500); // Internal server error
-            }
-        }
     }
 }
-
