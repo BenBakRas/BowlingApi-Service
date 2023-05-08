@@ -49,7 +49,21 @@ namespace BowlingData.DatabaseLayer
 
         public bool DeleteCustomerById(int id)
         {
-            throw new NotImplementedException();
+            bool isDeleted = false;
+            string deleteString = "DELETE FROM Customer WHERE id = @Id";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand deleteCommand = new SqlCommand(deleteString, con))
+            {
+                deleteCommand.Parameters.AddWithValue("@Id", id);
+
+                con.Open();
+                int rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                isDeleted = (rowsAffected > 0);
+                }
+
+            return isDeleted;
         }
 
         public List<Customer> GetAllCustomers()
@@ -101,7 +115,31 @@ namespace BowlingData.DatabaseLayer
 
         public bool UpdateCustomer(Customer customerToUpdate)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+            string updateString = "UPDATE Customer SET firstName = @FirstName, lastName = @LastName, email = @Email, phone = @Phone WHERE id = @Id";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
+            {
+                updateCommand.Parameters.AddWithValue("@Id", customerToUpdate.Id); // Add the missing @Id parameter
+                updateCommand.Parameters.AddWithValue("@FirstName", customerToUpdate.FirstName);
+                updateCommand.Parameters.AddWithValue("@LastName", customerToUpdate.LastName);
+                updateCommand.Parameters.AddWithValue("@Email", customerToUpdate.Email);
+                updateCommand.Parameters.AddWithValue("@Phone", customerToUpdate.Phone);
+
+                con.Open();
+                int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                if(isUpdated = (rowsAffected > 0))
+                {
+                    return isUpdated;
+                }
+                else
+                {
+                    return false; 
+                }
+            }
+            
         }
 
 

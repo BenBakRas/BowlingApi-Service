@@ -7,6 +7,7 @@ using ShModel;
 
 namespace BowlingData.DatabaseLayer
 {
+    //Interface
     public interface ICustomerAccess
     {
         Customer GetCustomerById(int id);

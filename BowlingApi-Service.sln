@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShModel", "..\ShModels\ShMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BowlingDataTest", "BowlingDataTest\BowlingDataTest.csproj", "{D6014DE0-3CB7-4588-B009-088F7B908D7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BowlingApiService", "BowlingApiService\BowlingApiService.csproj", "{D1C454D4-1802-4ACB-AD59-B2326885EF76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BowlingApiService", "BowlingApiService\BowlingApiService.csproj", "{D1C454D4-1802-4ACB-AD59-B2326885EF76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

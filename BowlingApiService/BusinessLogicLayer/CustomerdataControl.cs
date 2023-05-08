@@ -33,7 +33,15 @@ namespace BowlingApiService.BusinessLogicLayer
 
         public bool Delete(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                bool isDeleted = _customerAccess.DeleteCustomerById(id);
+                return isDeleted;
+            }
+            catch
+            {
+                return false;
+            };
         }
 
         public CustomerDto? Get(int id)
@@ -68,7 +76,19 @@ namespace BowlingApiService.BusinessLogicLayer
 
         public bool Put(CustomerDto customerToUpdate)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Customer? updatedCustomer = ModelConversion.CustomerDtoConvert.ToCustomer(customerToUpdate);
+                return _customerAccess.UpdateCustomer(updatedCustomer);
+                
+                
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine(ex);
+                return false;
+            }
         }
     }
 }

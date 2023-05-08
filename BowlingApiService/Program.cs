@@ -5,6 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddSingleton<ICustomerData, CustomerdataControl>();
 builder.Services.AddSingleton<ICustomerAccess, CustomerDatabaseAccess>();
+builder.Services.AddSingleton<ILaneData, LanedataControl>();
+builder.Services.AddSingleton<ILaneAccess, LaneDatabaseAccess>();
 
 builder.Services.AddControllers();
 
