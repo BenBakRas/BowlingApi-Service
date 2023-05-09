@@ -15,7 +15,7 @@ namespace BowlingDataTest
 
         readonly private ILaneAccess _laneAccess;
 
-        readonly string _connectionString = "Server=localhost; Integrated Security=true; Database=BowlingDB";
+        readonly string _connectionString = "Server=localhost; Integrated Security=true; Database=BowlingTest";
 
         public TestLaneDataAccess(ITestOutputHelper output)
         {

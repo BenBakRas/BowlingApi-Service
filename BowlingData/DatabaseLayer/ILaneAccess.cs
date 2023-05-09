@@ -9,7 +9,6 @@ namespace BowlingData.DatabaseLayer
 {
     public interface ILaneAccess
     {
-
         Lane GetLaneById(int id);
         List<Lane> GetAllLanes();
         int CreateLane(Lane aLane);
