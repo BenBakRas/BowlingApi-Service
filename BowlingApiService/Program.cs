@@ -7,6 +7,8 @@ builder.Services.AddSingleton<ICustomerData, CustomerdataControl>();
 builder.Services.AddSingleton<ICustomerAccess, CustomerDatabaseAccess>();
 builder.Services.AddSingleton<ILaneData, LanedataControl>();
 builder.Services.AddSingleton<ILaneAccess, LaneDatabaseAccess>();
+builder.Services.AddSingleton<IPriceData, PricedataControl>();
+builder.Services.AddSingleton<IPriceAccess, PriceDatabaseAccess>();
 
 builder.Services.AddControllers();
 

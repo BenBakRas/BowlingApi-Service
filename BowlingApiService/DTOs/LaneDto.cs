@@ -3,9 +3,9 @@
     public class LaneDto
     {
         public LaneDto() { }
-        public LaneDto(int? laneNumber) 
+        public LaneDto(int? InLaneNumber) 
         { 
-            LaneNumber = laneNumber;
+            LaneNumber = InLaneNumber;
         }
         public int? LaneNumber { get; set; }
     }

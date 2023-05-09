@@ -3,9 +3,9 @@
     public class LanedataCreateDto
     {
         public LanedataCreateDto() { }
-        public LanedataCreateDto(int laneNumber)
+        public LanedataCreateDto(int InLaneNumber)
         {
-            LaneNumber = laneNumber;
+            LaneNumber = InLaneNumber;
         }
         public int LaneNumber { get; set; }
     }
