@@ -74,11 +74,11 @@ namespace BowlingApiService.BusinessLogicLayer
             return foundDtos;
         }
 
-        public bool Put(CustomerDto customerToUpdate)
+        public bool Put(CustomerDto customerToUpdate, int idToUpdate)
         {
             try
             {
-                Customer? updatedCustomer = ModelConversion.CustomerDtoConvert.ToCustomer(customerToUpdate);
+                Customer? updatedCustomer = ModelConversion.CustomerDtoConvert.ToCustomer(customerToUpdate, idToUpdate);
                 return _customerAccess.UpdateCustomer(updatedCustomer);
                 
                 

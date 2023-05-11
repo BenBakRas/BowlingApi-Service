@@ -23,7 +23,7 @@ namespace BowlingDataTest
             _bAccess = new BookingDatabaseAccess(_connectionString);
         }
         [Fact]
-        public void TestGetAllPrices()
+        public void TestGetAllBookings()
         {
             // Arrange
 
@@ -31,7 +31,7 @@ namespace BowlingDataTest
             List<Booking> readBookings = _bAccess.GetAllBookings();
             bool pricesWereRead = (readBookings.Count > 0);
             // Print additional output
-            _extraOutput.WriteLine("Number of prices: " + readBookings.Count);
+            _extraOutput.WriteLine("Number of bookings: " + readBookings.Count);
 
             // Assert
             Assert.True(pricesWereRead);

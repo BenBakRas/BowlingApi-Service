@@ -8,7 +8,7 @@ namespace BowlingApiService.BusinessLogicLayer
         CustomerDto? Get(int id);
         List<CustomerDto>? Get();
         int Add(CustomerDto customerToAdd);
-        bool Put(CustomerDto customerToUpdate);
+        bool Put(CustomerDto customerToUpdate, int idToUpdate);
         bool Delete(int id);
     }
 }

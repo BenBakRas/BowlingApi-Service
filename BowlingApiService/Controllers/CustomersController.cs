@@ -131,7 +131,7 @@ namespace BowlingApiService.Controllers
             existingCustomerDto.Email = updatedCustomerDto.Email;
             existingCustomerDto.Phone = updatedCustomerDto.Phone;
 
-            bool isUpdated = _businessLogicCtrl.Put(existingCustomerDto);
+            bool isUpdated = _businessLogicCtrl.Put(existingCustomerDto, id);
             if (isUpdated)
             {
                 return Ok(isUpdated);     // Statuscode 200

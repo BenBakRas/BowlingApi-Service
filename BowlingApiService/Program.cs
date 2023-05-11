@@ -9,6 +9,9 @@ builder.Services.AddSingleton<ILaneData, LanedataControl>();
 builder.Services.AddSingleton<ILaneAccess, LaneDatabaseAccess>();
 builder.Services.AddSingleton<IPriceData, PricedataControl>();
 builder.Services.AddSingleton<IPriceAccess, PriceDatabaseAccess>();
+builder.Services.AddSingleton<IBookingData, BookingdataControl>();
+builder.Services.AddSingleton<IBookingAccess, BookingDatabaseAccess>();
+
 
 builder.Services.AddControllers();
 

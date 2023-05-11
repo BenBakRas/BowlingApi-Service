@@ -121,7 +121,7 @@ namespace BowlingData.DatabaseLayer
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand updateCommand = new SqlCommand(updateString, con))
             {
-                updateCommand.Parameters.AddWithValue("@Id", customerToUpdate.Id); // Add the missing @Id parameter
+                updateCommand.Parameters.AddWithValue("@Id", customerToUpdate.Id);
                 updateCommand.Parameters.AddWithValue("@FirstName", customerToUpdate.FirstName);
                 updateCommand.Parameters.AddWithValue("@LastName", customerToUpdate.LastName);
                 updateCommand.Parameters.AddWithValue("@Email", customerToUpdate.Email);

@@ -27,7 +27,7 @@ namespace BowlingData.DatabaseLayer
         public int CreateBooking(Booking aBooking)
         {
             int insertedId = -1;
-            string insertString = "INSERT INTO Booking (startDateTime, hoursToPlay, bookingNumber, noOfPlayers) OUTPUT INSERTED.ID VALUES (@StartDateTime, @HoursToPlay, @BookingNumber, @NoOfPlayers)";
+            string insertString = "INSERT INTO Booking (startDateTime, hoursToPlay, customerID, noOfPlayers) OUTPUT INSERTED.ID VALUES (@StartDateTime, @HoursToPlay, @Customer, @NoOfPlayers)";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand createCommand = new SqlCommand(insertString, con))
@@ -38,8 +38,8 @@ namespace BowlingData.DatabaseLayer
                 SqlParameter hoursToPlayParam = new SqlParameter("@HoursToPlay", aBooking.HoursToPlay);
                 createCommand.Parameters.Add(hoursToPlayParam);
 
-                SqlParameter bookingNumberParam = new SqlParameter("@BookingNumber", aBooking.BookingNumber);
-                createCommand.Parameters.Add(bookingNumberParam);
+                SqlParameter CustomerNumberParam = new SqlParameter("@Customer", aBooking.Customer.Id);
+                createCommand.Parameters.Add(CustomerNumberParam);
 
                 SqlParameter noOfPlayersParam = new SqlParameter("@NoOfPlayers", aBooking.NoOfPlayers);
                 createCommand.Parameters.Add(noOfPlayersParam);
@@ -74,7 +74,7 @@ namespace BowlingData.DatabaseLayer
         {
             List<Booking> foundBookings;
             Booking readBooking;
-            string queryString = "SELECT id, startDateTime, hoursToPlay, bookingNumber, noOfPlayers FROM Booking";
+            string queryString = "select id, hoursToPlay, startDateTime, noOfPlayers, customerID from Booking";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
@@ -96,7 +96,7 @@ namespace BowlingData.DatabaseLayer
         public Booking GetBookingById(int id)
         {
             Booking foundBooking;
-            string queryString = "SELECT id, startDateTime, hoursToPlay, bookingNumber, noOfPlayers FROM Booking WHERE id = @Id";
+            string queryString = "SELECT id, startDateTime, hoursToPlay, customerID, noOfPlayers FROM Booking WHERE Id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
@@ -119,7 +119,7 @@ namespace BowlingData.DatabaseLayer
         public bool UpdateBooking(Booking bookingToUpdate)
         {
             bool isUpdated = false;
-            string updateString = "UPDATE Booking SET startDateTime = @StartDateTime, hoursToPlay = @HoursToPlay, bookingNumber = @BookingNumber, noOfPlayers = @NoOfPlayers WHERE id = @Id";
+            string updateString = "UPDATE Booking SET startDateTime = @StartDateTime, hoursToPlay = @HoursToPlay, customerID = @CustomerID, noOfPlayers = @NoOfPlayers WHERE id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand updateCommand = new SqlCommand(updateString, con))
@@ -127,7 +127,7 @@ namespace BowlingData.DatabaseLayer
                 updateCommand.Parameters.AddWithValue("@Id", bookingToUpdate.Id);
                 updateCommand.Parameters.AddWithValue("@StartDateTime", bookingToUpdate.StartDateTime);
                 updateCommand.Parameters.AddWithValue("@HoursToPlay", bookingToUpdate.HoursToPlay);
-                updateCommand.Parameters.AddWithValue("@BookingNumber", bookingToUpdate.BookingNumber);
+                updateCommand.Parameters.AddWithValue("@CustomerID", bookingToUpdate.Customer.Id);
                 updateCommand.Parameters.AddWithValue("@NoOfPlayers", bookingToUpdate.NoOfPlayers);
 
                 con.Open();
@@ -141,15 +141,44 @@ namespace BowlingData.DatabaseLayer
 
         private Booking GetBookingFromReader(SqlDataReader bookingReader)
         {
+            int customerId = bookingReader.GetInt32(bookingReader.GetOrdinal("CustomerID"));
+
+            Customer customer = GetCustomerById(customerId); // Call a method to retrieve the customer by ID
+
             Booking foundBooking;
             int tempId = bookingReader.GetInt32(bookingReader.GetOrdinal("id"));
-            DateTime tempStartDateTime = bookingReader.GetDateTime(bookingReader.GetOrdinal("startDateTime"));
-            int tempHoursToPlay = bookingReader.GetInt32(bookingReader.GetOrdinal("hoursToPlay"));
-            int tempBookingNumber = bookingReader.GetInt32(bookingReader.GetOrdinal("bookingNumber"));
-            int tempNoOfPlayers = bookingReader.GetInt32(bookingReader.GetOrdinal("noOfPlayers"));
+            DateTime tempStartDateTime = bookingReader.GetDateTime(bookingReader.GetOrdinal("StartDateTime"));
+            int tempHoursToPlay = bookingReader.GetInt32(bookingReader.GetOrdinal("HoursToPlay"));
+            int tempNoOfPlayers = bookingReader.GetInt32(bookingReader.GetOrdinal("NoOfPlayers"));
 
-            foundBooking = new Booking(tempId, tempStartDateTime, tempHoursToPlay, tempBookingNumber, tempNoOfPlayers);
+            foundBooking = new Booking(tempId, tempStartDateTime, tempHoursToPlay, tempNoOfPlayers, customer);
             return foundBooking;
         }
+
+        private Customer GetCustomerById(int customerId)
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand("SELECT * FROM Customer WHERE id = @customerId", con))
+            {
+                command.Parameters.AddWithValue("@customerId", customerId);
+                con.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    // Retrieve customer details from the reader and return the customer object
+                    int id = reader.GetInt32(reader.GetOrdinal("id"));
+                    string firstName = reader.GetString(reader.GetOrdinal("FirstName"));
+                    string lastName = reader.GetString(reader.GetOrdinal("LastName"));
+                    string email = reader.GetString(reader.GetOrdinal("Email"));
+                    string phone = reader.GetString(reader.GetOrdinal("Phone"));
+
+                    return new Customer(id, firstName, lastName, email, phone);
+                }
+            }
+
+            return null; // Customer not found
+        }
+
     }
 }

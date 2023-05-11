@@ -1,5 +1,5 @@
-﻿using BowlingApiService.DTOs;
-using BowlingApiService.BusinessLogicLayer;
+﻿using BowlingApiService.BusinessLogicLayer;
+using BowlingApiService.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,28 +7,28 @@ namespace BowlingApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PricesController : ControllerBase
+    public class BookingsController : ControllerBase
     {
-        private readonly IPriceData _businessLogicCtrl;
+        private readonly IBookingData _businessLogicCtrl;
 
-        public PricesController(IPriceData inBusinessLogicCtrl)
+        public BookingsController(IBookingData inBusinessLogicCtrl)
         {
             _businessLogicCtrl = inBusinessLogicCtrl;
         }
 
-        // URL: api/prices
+        // URL: api/bookings
         [HttpGet]
-        public ActionResult<List<PriceDto>> Get()
+        public ActionResult<List<BookingDto>> Get()
         {
-            ActionResult<List<PriceDto>> foundReturn;
+            ActionResult<List<BookingDto>> foundReturn;
             // retrieve data - converted to DTO
-            List<PriceDto>? foundPrices = _businessLogicCtrl.Get()
+            List<BookingDto>? foundBookings = _businessLogicCtrl.Get();
             // evaluate
-            if (foundPrices != null)
+            if (foundBookings != null)
             {
-                if (foundPrices.Count > 0)
+                if (foundBookings.Count > 0)
                 {
-                    foundReturn = Ok(foundPrices);                   // Statuscode 200
+                    foundReturn = Ok(foundBookings);                 // Statuscode 200
                 }
                 else
                 {
@@ -43,17 +43,18 @@ namespace BowlingApiService.Controllers
             return foundReturn;
         }
 
-        // URL: api/prices/{id}
+
+        // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
-        public ActionResult<PriceDto> Get(int id)
+        public ActionResult<BookingDto> Get(int id)
         {
-            ActionResult<PriceDto> foundReturn;
+            ActionResult<BookingDto> foundReturn;
             // retrieve data - converted to DTO
-            PriceDto? foundPrice = _businessLogicCtrl.Get(id);
+            BookingDto? foundBooking = _businessLogicCtrl.Get(id);
             // evaluate
-            if (foundPrice != null)
+            if (foundBooking != null)
             {
-                foundReturn = Ok(foundPrice);       // Statuscode 200
+                foundReturn = Ok(foundBooking);       // Statuscode 200
             }
             else
             {
@@ -63,15 +64,15 @@ namespace BowlingApiService.Controllers
             return foundReturn;
         }
 
-        // URL: api/prices
+        // URL: api/bookings
         [HttpPost]
-        public ActionResult<int> PostNewPrice(PriceDto inPriceDto)
+        public ActionResult<int> PostNewBooking(BookingDto inBookingDto)
         {
             ActionResult<int> foundReturn;
             int insertedId = -1;
-            if (inPriceDto != null)
+            if (inBookingDto != null)
             {
-                insertedId = _businessLogicCtrl.Add(inPriceDto);
+                insertedId = _businessLogicCtrl.Add(inBookingDto);
             }
             // Evaluate
             if (insertedId > 0)
@@ -88,8 +89,7 @@ namespace BowlingApiService.Controllers
             }
             return foundReturn;
         }
-
-        // URL: api/prices/{id}
+        // URL: api/bookings/{id}
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {
@@ -107,30 +107,29 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-
-        // URL: api/prices/{id}
         [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] PriceDto updatedPriceDto)
+        public ActionResult Put(int id, [FromBody] BookingDto updatedBookingDto)
         {
-            if (updatedPriceDto == null)
+            if (updatedBookingDto == null)
             {
                 return BadRequest();    // Bad request, missing input
             }
 
-            // Retrieve the existing price details
-            PriceDto? existingPriceDto = _businessLogicCtrl.Get(id);
+            // Retrieve the existing booking details
+            BookingDto? existingBookingDto = _businessLogicCtrl.Get(id);
 
-            if (existingPriceDto == null)
+            if (existingBookingDto == null)
             {
-                return NotFound();    // Price not found
+                return NotFound();    // Booking not found
             }
 
-            // Update the existing price details with the new values
-            existingPriceDto.NormalPrice = updatedPriceDto.NormalPrice;
-            existingPriceDto.SpecialPrice = updatedPriceDto.SpecialPrice;
-            existingPriceDto.Weekday = updatedPriceDto.Weekday;
+            // Update the existing booking details with the new values
+            existingBookingDto.StartDateTime = updatedBookingDto.StartDateTime;
+            existingBookingDto.HoursToPlay = updatedBookingDto.HoursToPlay;
+            existingBookingDto.NoOfPlayers = updatedBookingDto.NoOfPlayers;
+           // existingBookingDto.CustomerDto = updatedBookingDto.CustomerDto;
 
-            bool isUpdated = _businessLogicCtrl.Put(existingPriceDto);
+            bool isUpdated = _businessLogicCtrl.Put(existingBookingDto, id);
             if (isUpdated)
             {
                 return Ok(isUpdated);     // Statuscode 200
