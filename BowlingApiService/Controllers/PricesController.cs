@@ -22,7 +22,7 @@ namespace BowlingApiService.Controllers
         {
             ActionResult<List<PriceDto>> foundReturn;
             // retrieve data - converted to DTO
-            List<PriceDto>? foundPrices = _businessLogicCtrl.Get()
+            List<PriceDto>? foundPrices = _businessLogicCtrl.Get();
             // evaluate
             if (foundPrices != null)
             {
