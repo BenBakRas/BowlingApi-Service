@@ -179,6 +179,44 @@ namespace BowlingData.DatabaseLayer
 
             return null; // Customer not found
         }
+        public bool CreatePriceBooking(int priceId, int bookingId)
+        {
+            bool isCreated = false;
+            string insertString = "INSERT INTO PriceBooking (PriceId, BookingId) VALUES (@PriceId, @BookingId)";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand createCommand = new SqlCommand(insertString, con))
+            {
+                createCommand.Parameters.AddWithValue("@PriceId", priceId);
+                createCommand.Parameters.AddWithValue("@BookingId", bookingId);
+
+                con.Open();
+                int rowsAffected = createCommand.ExecuteNonQuery();
+
+                isCreated = (rowsAffected > 0);
+            }
+
+            return isCreated;
+        }
+        public bool CreateLaneBooking(int laneId, int bookingId)
+        {
+            bool isCreated = false;
+            string insertString = "INSERT INTO LaneBooking (LaneId, BookingId) VALUES (@LaneId, @BookingId)";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand createCommand = new SqlCommand(insertString, con))
+            {
+                createCommand.Parameters.AddWithValue("@LaneId", laneId);
+                createCommand.Parameters.AddWithValue("@BookingId", bookingId);
+
+                con.Open();
+                int rowsAffected = createCommand.ExecuteNonQuery();
+
+                isCreated = (rowsAffected > 0);
+            }
+
+            return isCreated;
+        }
 
     }
 }

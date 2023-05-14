@@ -16,6 +16,8 @@ namespace BowlingDataTest
         readonly private IBookingAccess _bAccess;
 
         readonly private ICustomerAccess _cAccess;
+        
+        readonly private ILaneAccess _laneAccess;
 
         readonly string _connectionString = "Server=localhost; Integrated Security=true; Database=BowlingTest";
 
@@ -24,7 +26,7 @@ namespace BowlingDataTest
             _extraOutput = output;
             _bAccess = new BookingDatabaseAccess(_connectionString);
             _cAccess = new CustomerDatabaseAccess(_connectionString);
-
+            _laneAccess = new LaneDatabaseAccess(_connectionString);
 
         }
         [Fact]
@@ -132,5 +134,33 @@ namespace BowlingDataTest
             Assert.Equal(updatedBooking.HoursToPlay, retrievedBooking.HoursToPlay);
             Assert.Equal(updatedBooking.NoOfPlayers, retrievedBooking.NoOfPlayers);
         }
+        [Fact]
+        public void TestLaneBooking()
+        {
+            // Arrange
+            DateTime dateTime = DateTime.Now;
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            int cID = _cAccess.CreateCustomer(cus);
+            Customer customerRetrieved = _cAccess.GetCustomerById(cID);
+
+            Booking bk = new Booking(dateTime, 3, 5, customerRetrieved); // Create a new Booking object
+            int insertedId = _bAccess.CreateBooking(bk); // Insert the Booking into the database
+                                                         // Lane too book
+            Lane lane = new Lane(5);
+            int laneId = _laneAccess.CreateLane(lane);
+
+            // Act
+            bool inserted = _bAccess.CreateLaneBooking(laneId, insertedId);
+            Booking retrievedBooking = _bAccess.GetBookingById(insertedId);
+
+            // Assert
+
+            Assert.True(inserted);
+            Assert.NotNull(retrievedBooking);
+            Assert.Equal(insertedId, retrievedBooking.Id);
+
+
+        }
+
     }
 }
