@@ -1,5 +1,6 @@
 ﻿using BowlingApiService.DTOs;
 using BowlingData.DatabaseLayer;
+using Microsoft.AspNetCore.Mvc;
 using ShModel;
 
 namespace BowlingApiService.BusinessLogicLayer
@@ -73,7 +74,6 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return foundDtos;
         }
-
         public bool Put(BookingDto bookingToUpdate, int idToUpdate)
         {
             try
@@ -87,6 +87,10 @@ namespace BowlingApiService.BusinessLogicLayer
                 Console.WriteLine(ex);
                 return false;
             }
+
         }
+        
     }
 }
+
+

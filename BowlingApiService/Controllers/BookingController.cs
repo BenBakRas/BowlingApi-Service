@@ -127,7 +127,7 @@ namespace BowlingApiService.Controllers
             existingBookingDto.StartDateTime = updatedBookingDto.StartDateTime;
             existingBookingDto.HoursToPlay = updatedBookingDto.HoursToPlay;
             existingBookingDto.NoOfPlayers = updatedBookingDto.NoOfPlayers;
-           // existingBookingDto.CustomerDto = updatedBookingDto.CustomerDto;
+            existingBookingDto.Customer = updatedBookingDto.Customer;
 
             bool isUpdated = _businessLogicCtrl.Put(existingBookingDto, id);
             if (isUpdated)

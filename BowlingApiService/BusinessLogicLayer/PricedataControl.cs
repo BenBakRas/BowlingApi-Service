@@ -73,11 +73,11 @@ namespace BowlingApiService.BusinessLogicLayer
             return foundDtos;
         }
 
-        public bool Put(PriceDto priceToUpdate)
+        public bool Put(PriceDto priceToUpdate, int idToUpdate)
         {
             try
             {
-                Price? updatedPrice = ModelConversion.PriceDtoConvert.ToPrice(priceToUpdate);
+                Price? updatedPrice = ModelConversion.PriceDtoConvert.ToPrice(priceToUpdate, idToUpdate);
                 return _priceAccess.UpdatePrice(updatedPrice);
             }
             catch (Exception ex)

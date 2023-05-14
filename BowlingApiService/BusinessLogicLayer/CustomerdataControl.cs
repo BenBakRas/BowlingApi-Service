@@ -80,8 +80,6 @@ namespace BowlingApiService.BusinessLogicLayer
             {
                 Customer? updatedCustomer = ModelConversion.CustomerDtoConvert.ToCustomer(customerToUpdate, idToUpdate);
                 return _customerAccess.UpdateCustomer(updatedCustomer);
-                
-                
             }
             catch (Exception ex)
             {

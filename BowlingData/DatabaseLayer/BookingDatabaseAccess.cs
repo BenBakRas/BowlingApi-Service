@@ -96,7 +96,7 @@ namespace BowlingData.DatabaseLayer
         public Booking GetBookingById(int id)
         {
             Booking foundBooking;
-            string queryString = "SELECT id, startDateTime, hoursToPlay, customerID, noOfPlayers FROM Booking WHERE Id = @Id";
+            string queryString = "SELECT id, hoursToPlay, startDateTime, noOfPlayers, customerID FROM Booking WHERE Id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))

@@ -105,5 +105,34 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
+        // URL: api/lanes/{id}
+        [HttpPut("{id}")]
+        public ActionResult Put(int id, [FromBody] LaneDto updatedLaneDto)
+        {
+            if (updatedLaneDto == null)
+            {
+                return BadRequest();    // Bad request, missing input
+            }
+
+            // Retrieve the existing lane details
+            LaneDto? existingLaneDto = _businessLogicCtrl.Get(id);
+
+            if (existingLaneDto == null)
+            {
+                return NotFound();    // Lane not found
+            }
+            // Update the existing lane details with the new values
+            existingLaneDto.LaneNumber = updatedLaneDto.LaneNumber;
+
+            bool isUpdated = _businessLogicCtrl.Put(existingLaneDto, id);
+            if (isUpdated)
+            {
+                return Ok(isUpdated);     // Statuscode 200
+            }
+            else
+            {
+                return StatusCode(500); // Internal server error
+            }
+        }
     }
 }

@@ -76,9 +76,21 @@ namespace BowlingApiService.BusinessLogicLayer
             return foundDtos;
         }
 
-        public bool Put(LaneDto laneToUpdate)
+        public bool Put(LaneDto laneToUpdate, int idToUpdate)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Lane? updatedLane = ModelConversion.LaneDtoConvert.ToLane(laneToUpdate, idToUpdate);
+                return _laneAcces.UpdateLane(updatedLane);
+
+
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                Console.WriteLine(ex);
+                return false;
+            }
         }
     }
 }

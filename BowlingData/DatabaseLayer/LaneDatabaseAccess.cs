@@ -106,7 +106,27 @@ namespace BowlingData.DatabaseLayer
 
         public bool UpdateLane(Lane laneToUpdate)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+            string updateString = "UPDATE Lane SET laneNumber = @LaneNumber WHERE Id = @Id";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
+            {
+                updateCommand.Parameters.AddWithValue("@Id", laneToUpdate.Id);
+                updateCommand.Parameters.AddWithValue("@LaneNumber", laneToUpdate.LaneNumber);
+
+                con.Open();
+                int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                if (isUpdated = (rowsAffected > 0))
+                {
+                    return isUpdated;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         private Lane GetLaneFromReader(SqlDataReader laneReader) 

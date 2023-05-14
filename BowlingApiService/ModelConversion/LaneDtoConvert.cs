@@ -46,6 +46,16 @@ namespace BowlingApiService.ModelConversion
             }
             return aLanes;
         }
+        public static Lane? ToLane(LaneDto inDto, int idToUpdate)
+        {
+            Lane? aLanes = null;
+            if (inDto != null)
+            {
+                aLanes = new Lane(inDto.LaneNumber);
+                aLanes.Id = idToUpdate;
+            }
+            return aLanes;
+        }
 
     }
 }

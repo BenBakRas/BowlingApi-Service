@@ -78,5 +78,27 @@ namespace BowlingDataTest
             // Assert
             Assert.True(isDeleted);
         }
+        [Fact]
+        public void TestUpdateLane()
+        {
+            // Arrange
+            Lane lane = new Lane(5); // Create a new Lane object
+            int insertedId = _laneAccess.CreateLane(lane); // Insert the Lane into the database
+
+            // Modify the Lane object
+            Lane updatedLane = new Lane(insertedId, 10);
+
+            // Act
+            bool isUpdated = _laneAccess.UpdateLane(updatedLane);
+
+            // Retrieve the updated Lane from the database
+            Lane retrievedLane = _laneAccess.GetLaneById(insertedId);
+
+            // Assert
+            Assert.True(isUpdated);
+            Assert.NotNull(retrievedLane);
+            Assert.Equal(updatedLane.Id, retrievedLane.Id);
+            Assert.Equal(updatedLane.LaneNumber, retrievedLane.LaneNumber);
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace BowlingDataTest
         {
             _extraOutput = output;
             _pAccess = new PriceDatabaseAccess(_connectionString);
+
         }
 
         [Fact]
@@ -36,6 +37,70 @@ namespace BowlingDataTest
 
             // Assert
             Assert.True(pricesWereRead);
+        }
+        [Fact]
+        public void TestCreatePrice()
+        {
+            // Arrange
+            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+
+            // Act
+            int insertedId = _pAccess.CreatePrice(price);
+
+            // Assert
+            Assert.True(insertedId > 0);
+        }
+
+        [Fact]
+        public void TestGetPriceById()
+        {
+            // Arrange
+            double actualNP = 120.00;
+            Price price = new Price(120.00, 150.00, "Torsdag"); // Insert the Price into the database
+            int inserteId = _pAccess.CreatePrice(price);
+            // Act
+            Price priceRetrived = _pAccess.GetPriceById(inserteId);
+
+            // Assert
+            Assert.NotNull(priceRetrived);
+            Assert.Equal(inserteId, priceRetrived.Id);
+            Assert.Equal(actualNP, priceRetrived.NormalPrice);
+        }
+
+        [Fact]
+        public void TestDeletePriceById()
+        {
+            // Arrange
+            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+            int insertedId = _pAccess.CreatePrice(price); // Insert the Price into the database
+
+            // Act
+            bool isDeleted = _pAccess.DeletePriceById(insertedId);
+
+            // Assert
+            Assert.True(isDeleted);
+        }
+        [Fact]
+        public void TestUpdatePrice()
+        {
+            // Arrange
+            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+            int insertedId = _pAccess.CreatePrice(price); // Insert the Price into the database
+
+            // Modify the Price object
+            Price updatedPrice = new Price(insertedId, 130.00, 160.00, "Torsdag");
+
+            // Act
+            bool isUpdated = _pAccess.UpdatePrice(updatedPrice);
+
+            // Retrieve the updated Price from the database
+            Price retrievedPrice = _pAccess.GetPriceById(insertedId);
+
+            // Assert
+            Assert.True(isUpdated);
+            Assert.NotNull(retrievedPrice);
+            Assert.Equal(updatedPrice.Id, retrievedPrice.Id);
+            Assert.Equal(updatedPrice.NormalPrice, retrievedPrice.NormalPrice);
         }
     }
 }

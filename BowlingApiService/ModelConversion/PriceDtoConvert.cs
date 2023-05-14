@@ -46,5 +46,15 @@ namespace BowlingApiService.ModelConversion
             }
             return price;
         }
+        public static Price? ToPrice(PriceDto inDto, int idToUpdate)
+        {
+            Price? aPrice = null;
+            if (inDto != null)
+            {
+                aPrice = new Price(inDto.NormalPrice, inDto.SpecialPrice, inDto.Weekday);
+                aPrice.Id = idToUpdate;
+            }
+            return aPrice;
+        }
     }
 }

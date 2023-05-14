@@ -15,12 +15,17 @@ namespace BowlingDataTest
 
         readonly private IBookingAccess _bAccess;
 
+        readonly private ICustomerAccess _cAccess;
+
         readonly string _connectionString = "Server=localhost; Integrated Security=true; Database=BowlingTest";
 
         public TestBookingDataAccess(ITestOutputHelper output)
         {
             _extraOutput = output;
             _bAccess = new BookingDatabaseAccess(_connectionString);
+            _cAccess = new CustomerDatabaseAccess(_connectionString);
+
+
         }
         [Fact]
         public void TestGetAllBookings()
@@ -35,6 +40,97 @@ namespace BowlingDataTest
 
             // Assert
             Assert.True(pricesWereRead);
+        }
+        [Fact]
+        public void TestCreateBooking()
+        {
+            //Arrange
+            DateTime dateTime = DateTime.Now;
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            int cID = _cAccess.CreateCustomer(cus);
+            Customer customerRetrived = _cAccess.GetCustomerById(cID);
+
+            Booking bk = new Booking(dateTime, 3, 5, customerRetrived); // Create a new Booking object
+
+            // Act
+            int insertedId = _bAccess.CreateBooking(bk);
+
+            // Assert
+            Assert.True(insertedId > 0);
+        }
+
+        [Fact]
+        public void TestGetBookingById()
+        {
+            //Arrange
+            DateTime dateTime = DateTime.Now;
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            int cID = _cAccess.CreateCustomer(cus);
+            Customer customerRetrived = _cAccess.GetCustomerById(cID);
+
+            int actualNoOfPlayers = 5;
+
+            Booking bk = new Booking(dateTime, 3, 5, customerRetrived); // Create a new Booking object
+            int insertedId = _bAccess.CreateBooking(bk);
+
+            // Act
+            Booking retrievedBooking = _bAccess.GetBookingById(insertedId);
+
+            // Assert
+            Assert.NotNull(retrievedBooking);
+            Assert.Equal(insertedId, retrievedBooking.Id);
+            Assert.Equal(actualNoOfPlayers, retrievedBooking.NoOfPlayers);
+        }
+
+        [Fact]
+        public void TestDeleteBookingById()
+        {
+            DateTime dateTime = DateTime.Now;
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            int cID = _cAccess.CreateCustomer(cus);
+            Customer customerRetrived = _cAccess.GetCustomerById(cID);
+
+            Booking bk = new Booking(dateTime, 3, 5, customerRetrived); // Create a new Booking object
+            int insertedId = _bAccess.CreateBooking(bk); // Insert the Booking into the database
+
+            // Act
+            bool isDeleted = _bAccess.DeleteBookingById(insertedId);
+
+            // Assert
+            Assert.True(isDeleted);
+        }
+        [Fact]
+        public void TestUpdateBooking()
+        {
+            // Arrange
+            DateTime dateTime = DateTime.Now;
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            int cID = _cAccess.CreateCustomer(cus);
+            Customer customerRetrieved = _cAccess.GetCustomerById(cID);
+
+            Booking bk = new Booking(dateTime, 3, 5, customerRetrieved); // Create a new Booking object
+            int insertedId = _bAccess.CreateBooking(bk); // Insert the Booking into the database
+
+            // Update the booking with new values
+            Booking updatedBooking = _bAccess.GetBookingById(insertedId);
+            updatedBooking.StartDateTime = dateTime.AddDays(0); // Update the start date/time
+            updatedBooking.HoursToPlay = 4; // Update the hours to play
+            updatedBooking.NoOfPlayers = 6; // Update the number of players
+
+            // Act
+            bool isUpdated = _bAccess.UpdateBooking(updatedBooking);
+
+            // Assert
+            Assert.True(isUpdated);
+
+            // Retrieve the updated booking from the database
+            Booking retrievedBooking = _bAccess.GetBookingById(insertedId);
+
+            // Verify that the booking has been updated correctly
+            Assert.NotNull(retrievedBooking);
+            Assert.Equal(insertedId, retrievedBooking.Id);
+            Assert.Equal(updatedBooking.HoursToPlay, retrievedBooking.HoursToPlay);
+            Assert.Equal(updatedBooking.NoOfPlayers, retrievedBooking.NoOfPlayers);
         }
     }
 }

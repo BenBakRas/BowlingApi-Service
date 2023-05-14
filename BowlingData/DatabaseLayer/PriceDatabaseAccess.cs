@@ -112,7 +112,29 @@ namespace BowlingData.DatabaseLayer
 
         public bool UpdatePrice(Price priceToUpdate)
         {
-            throw new NotImplementedException();
+            bool isUpdated = false;
+            string updateString = "UPDATE Price SET NormalPrice = @NormalPrice, SpecialPrice = @SpecialPrice, Weekday = @Weekday WHERE id = @Id";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
+            {
+                updateCommand.Parameters.AddWithValue("@Id", priceToUpdate.Id);
+                updateCommand.Parameters.AddWithValue("@NormalPrice", priceToUpdate.NormalPrice);
+                updateCommand.Parameters.AddWithValue("@SpecialPrice", priceToUpdate.SpecialPrice);
+                updateCommand.Parameters.AddWithValue("@Weekday", priceToUpdate.Weekday);
+
+                con.Open();
+                int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                if (isUpdated = (rowsAffected > 0))
+                {
+                    return isUpdated;
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         private Price GetPriceFromReader(SqlDataReader priceReader)
@@ -130,5 +152,6 @@ namespace BowlingData.DatabaseLayer
             foundPrice = new Price(tempID, tempNormalPrice, tempSpecialPrice, tempWeekDay);
             return foundPrice;
         }
+
     }
 }

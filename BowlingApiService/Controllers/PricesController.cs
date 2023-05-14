@@ -130,7 +130,7 @@ namespace BowlingApiService.Controllers
             existingPriceDto.SpecialPrice = updatedPriceDto.SpecialPrice;
             existingPriceDto.Weekday = updatedPriceDto.Weekday;
 
-            bool isUpdated = _businessLogicCtrl.Put(existingPriceDto);
+            bool isUpdated = _businessLogicCtrl.Put(existingPriceDto, id);
             if (isUpdated)
             {
                 return Ok(isUpdated);     // Statuscode 200
