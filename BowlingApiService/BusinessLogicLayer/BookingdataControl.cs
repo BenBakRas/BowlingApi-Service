@@ -1,7 +1,7 @@
 ﻿using BowlingApiService.DTOs;
 using BowlingData.DatabaseLayer;
 using Microsoft.AspNetCore.Mvc;
-using ShModel;
+using BowlingData.ModelLayer;
 
 namespace BowlingApiService.BusinessLogicLayer
 {

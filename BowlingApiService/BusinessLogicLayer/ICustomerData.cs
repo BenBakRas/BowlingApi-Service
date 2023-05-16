@@ -1,5 +1,5 @@
 ﻿using BowlingApiService.DTOs;
-using ShModel;
+using BowlingData.ModelLayer;
 
 namespace BowlingApiService.BusinessLogicLayer
 {

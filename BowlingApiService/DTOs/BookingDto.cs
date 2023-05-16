@@ -1,4 +1,4 @@
-﻿using ShModel;
+﻿using BowlingData.ModelLayer;
 
 namespace BowlingApiService.DTOs
 {

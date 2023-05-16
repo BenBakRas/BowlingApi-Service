@@ -1,6 +1,6 @@
 ﻿using BowlingApiService.DTOs;
 using BowlingData.DatabaseLayer;
-using ShModel;
+using BowlingData.ModelLayer;
 using System.Linq.Expressions;
 
 namespace BowlingApiService.BusinessLogicLayer

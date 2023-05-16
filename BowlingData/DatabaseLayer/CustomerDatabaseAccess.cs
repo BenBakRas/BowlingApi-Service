@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ShModel;
+using BowlingData.ModelLayer;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

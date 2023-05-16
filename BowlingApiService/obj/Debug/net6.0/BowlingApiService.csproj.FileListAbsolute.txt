@@ -35,8 +35,6 @@ C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\D
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\BowlingApiService.pdb
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\BowlingApiService.genruntimeconfig.cache
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\ref\BowlingApiService.dll
-C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\ShModel.dll
-C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\ShModel.pdb
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\appsettings.json
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\BowlingApiService.exe

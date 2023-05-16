@@ -206,7 +206,6 @@
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
           "Microsoft.Extensions.Configuration.Abstractions": "7.0.0",
-          "ShModel": "1.0.0",
           "System.Data.SqlClient": "4.8.5"
         },
         "compile": {
@@ -214,16 +213,6 @@
         },
         "runtime": {
           "bin/placeholder/BowlingData.dll": {}
-        }
-      },
-      "ShModel/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "compile": {
-          "bin/placeholder/ShModel.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/ShModel.dll": {}
         }
       }
     }
@@ -625,11 +614,6 @@
       "type": "project",
       "path": "../BowlingData/BowlingData.csproj",
       "msbuildProject": "../BowlingData/BowlingData.csproj"
-    },
-    "ShModel/1.0.0": {
-      "type": "project",
-      "path": "../../ShModels/ShModel/ShModel.csproj",
-      "msbuildProject": "../../ShModels/ShModel/ShModel.csproj"
     }
   },
   "projectFileDependencyGroups": {

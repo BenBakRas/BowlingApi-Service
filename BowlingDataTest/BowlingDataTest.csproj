@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ShModels\ShModel\ShModel.csproj" />
     <ProjectReference Include="..\BowlingData\BowlingData.csproj" />
   </ItemGroup>
 

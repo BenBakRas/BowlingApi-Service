@@ -1,4 +1,4 @@
-﻿using ShModel;
+﻿using BowlingData.ModelLayer;
 using System.Data.SqlClient;
 using System;
 using System.Collections.Generic;

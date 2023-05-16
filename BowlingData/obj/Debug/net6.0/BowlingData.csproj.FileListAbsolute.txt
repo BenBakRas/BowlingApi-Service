@@ -10,9 +10,6 @@ C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\obj\Debug\n
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\obj\Debug\net6.0\refint\BowlingData.dll
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\obj\Debug\net6.0\BowlingData.pdb
 C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\obj\Debug\net6.0\ref\BowlingData.dll
-C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\bin\Debug\net6.0\ShModel.dll
-C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\bin\Debug\net6.0\ShModel.pdb
-C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingData\obj\Debug\net6.0\BowlingData.csproj.CopyComplete
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingData\bin\Debug\net6.0\BowlingData.deps.json
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingData\bin\Debug\net6.0\BowlingData.dll
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingData\bin\Debug\net6.0\BowlingData.pdb
