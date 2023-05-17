@@ -74,3 +74,11 @@ C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\D
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\BowlingApiService.pdb
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\BowlingApiService.genruntimeconfig.cache
 C:\Users\Benj3\Source\Repos\BenBakRas\BowlingApi-Service\BowlingApiService\obj\Debug\net6.0\ref\BowlingApiService.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\Benqf\source\repos\BenBakRas\BowlingApi-Service\BowlingApiService\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll

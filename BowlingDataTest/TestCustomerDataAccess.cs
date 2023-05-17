@@ -1,6 +1,6 @@
 using Xunit.Abstractions;
 using BowlingData.DatabaseLayer;
-using ShModel;
+using BowlingData.ModelLayer;
 using System;
 
 namespace BowlingDataTest

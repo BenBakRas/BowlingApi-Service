@@ -1,3 +1,3 @@
 global using Xunit;
-using ShModel;
+using BowlingData.ModelLayer;
 using BowlingData.DatabaseLayer;
