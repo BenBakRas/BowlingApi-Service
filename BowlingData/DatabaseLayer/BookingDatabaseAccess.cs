@@ -116,6 +116,49 @@ namespace BowlingData.DatabaseLayer
 
             return foundBooking;
         }
+
+        public List<Booking> GetBookingsByCId(int customerId)
+        {
+            List<Booking> bookings = new List<Booking>();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    string queryString = "SELECT * FROM Booking WHERE CustomerId = @CustomerId";
+                    SqlCommand command = new SqlCommand(queryString, con);
+                    command.Parameters.AddWithValue("@CustomerId", customerId);
+
+                    con.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Booking booking = new Booking
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            StartDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime")),
+                            HoursToPlay = reader.GetInt32(reader.GetOrdinal("HoursToPlay")),
+                            NoOfPlayers = reader.GetInt32(reader.GetOrdinal("NoOfPlayers"))
+
+                        };
+                        Customer cus = GetCustomerById(customerId);
+                        booking.Customer = cus;
+                        bookings.Add(booking);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately or log the error
+                Console.WriteLine($"An error occurred while retrieving bookings for customer ID {customerId}: {ex.Message}");
+                return null;
+            }
+
+            return bookings;
+        }
+
         public bool UpdateBooking(Booking bookingToUpdate)
         {
             bool isUpdated = false;

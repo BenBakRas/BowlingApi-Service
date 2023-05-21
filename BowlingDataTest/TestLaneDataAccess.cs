@@ -47,6 +47,7 @@ namespace BowlingDataTest
 
             // Assert
             Assert.True(insertedId > 0);
+            _laneAccess.DeleteLaneById(insertedId);
         }
 
         [Fact]
@@ -63,6 +64,7 @@ namespace BowlingDataTest
             Assert.NotNull(retrievedLane);
             Assert.Equal(insertedId, retrievedLane.Id);
             Assert.Equal(lane.LaneNumber, retrievedLane.LaneNumber);
+            _laneAccess.DeleteLaneById(insertedId);
         }
 
         [Fact]
@@ -99,6 +101,7 @@ namespace BowlingDataTest
             Assert.NotNull(retrievedLane);
             Assert.Equal(updatedLane.Id, retrievedLane.Id);
             Assert.Equal(updatedLane.LaneNumber, retrievedLane.LaneNumber);
+            _laneAccess.DeleteLaneById(insertedId);
         }
     }
 }

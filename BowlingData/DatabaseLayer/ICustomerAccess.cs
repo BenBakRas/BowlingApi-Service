@@ -15,5 +15,6 @@ namespace BowlingData.DatabaseLayer
         int CreateCustomer(Customer aCustomer);
         bool UpdateCustomer(Customer customerToUpdate);
         bool DeleteCustomerById(int id);
+        Customer GetCustomerByPhone(string phone);
     }
 }

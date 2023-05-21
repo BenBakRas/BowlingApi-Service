@@ -88,5 +88,19 @@ namespace BowlingApiService.BusinessLogicLayer
                 return false;
             }
         }
+        public CustomerDto? Get(string phone)
+        {
+            CustomerDto? foundCustomerDto;
+            try
+            {
+                Customer? foundCustomer = _customerAccess.GetCustomerByPhone(phone);
+                foundCustomerDto = ModelConversion.CustomerDtoConvert.FromCustomer(foundCustomer);
+            }
+            catch
+            {
+                foundCustomerDto = null;
+            }
+            return foundCustomerDto;
+        }
     }
 }

@@ -49,6 +49,7 @@ namespace BowlingDataTest
 
             // Assert
             Assert.True(insertedId > 0);
+            _pAccess.DeletePriceById(insertedId);
         }
 
         [Fact]
@@ -57,14 +58,15 @@ namespace BowlingDataTest
             // Arrange
             double actualNP = 120.00;
             Price price = new Price(120.00, 150.00, "Torsdag"); // Insert the Price into the database
-            int inserteId = _pAccess.CreatePrice(price);
+            int insertedId = _pAccess.CreatePrice(price);
             // Act
-            Price priceRetrived = _pAccess.GetPriceById(inserteId);
+            Price priceRetrived = _pAccess.GetPriceById(insertedId);
 
             // Assert
             Assert.NotNull(priceRetrived);
-            Assert.Equal(inserteId, priceRetrived.Id);
+            Assert.Equal(insertedId, priceRetrived.Id);
             Assert.Equal(actualNP, priceRetrived.NormalPrice);
+            _pAccess.DeletePriceById(insertedId);
         }
 
         [Fact]
@@ -101,6 +103,7 @@ namespace BowlingDataTest
             Assert.NotNull(retrievedPrice);
             Assert.Equal(updatedPrice.Id, retrievedPrice.Id);
             Assert.Equal(updatedPrice.NormalPrice, retrievedPrice.NormalPrice);
+            _pAccess.DeletePriceById(insertedId);
         }
     }
 }

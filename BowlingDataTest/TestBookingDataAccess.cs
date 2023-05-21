@@ -59,6 +59,7 @@ namespace BowlingDataTest
 
             // Assert
             Assert.True(insertedId > 0);
+            _bAccess.DeleteBookingById(insertedId);
         }
 
         [Fact]
@@ -82,6 +83,7 @@ namespace BowlingDataTest
             Assert.NotNull(retrievedBooking);
             Assert.Equal(insertedId, retrievedBooking.Id);
             Assert.Equal(actualNoOfPlayers, retrievedBooking.NoOfPlayers);
+            _bAccess.DeleteBookingById(insertedId);
         }
 
         [Fact]
@@ -133,6 +135,7 @@ namespace BowlingDataTest
             Assert.Equal(insertedId, retrievedBooking.Id);
             Assert.Equal(updatedBooking.HoursToPlay, retrievedBooking.HoursToPlay);
             Assert.Equal(updatedBooking.NoOfPlayers, retrievedBooking.NoOfPlayers);
+            _bAccess.DeleteBookingById(insertedId);
         }
         [Fact]
         public void TestLaneBooking()
@@ -158,7 +161,7 @@ namespace BowlingDataTest
             Assert.True(inserted);
             Assert.NotNull(retrievedBooking);
             Assert.Equal(insertedId, retrievedBooking.Id);
-
+            _bAccess.DeleteBookingById(insertedId);
 
         }
 

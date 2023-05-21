@@ -45,7 +45,7 @@ namespace BowlingApiService.BusinessLogicLayer
             }
         }
 
-        public BookingDto? Get(int id)
+      public BookingDto? Get(int id)
         {
             BookingDto? foundBookingDto;
             try
@@ -89,8 +89,20 @@ namespace BowlingApiService.BusinessLogicLayer
             }
 
         }
-        
+        public List<BookingDto>? GetBookingsByCustomerId(int customerId)
+        {
+            List<BookingDto>? foundDtos;
+            try
+            {
+                List<Booking>? foundBookings = _bookingAccess.GetBookingsByCId(customerId);
+                foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
+            }
+            catch
+            {
+                foundDtos = null;
+            }
+            return foundDtos;
+        }
     }
-}
 
-
+    }

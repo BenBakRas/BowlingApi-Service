@@ -9,6 +9,7 @@ namespace BowlingData.DatabaseLayer
 {
     public interface IBookingAccess
     {
+        List<Booking> GetBookingsByCId(int customerID);
         Booking GetBookingById(int id);
         List<Booking> GetAllBookings();
         int CreateBooking(Booking aBooking);

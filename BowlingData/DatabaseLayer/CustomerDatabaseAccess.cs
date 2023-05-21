@@ -159,6 +159,30 @@ namespace BowlingData.DatabaseLayer
             return foundCustomer;
         }
 
+        public Customer GetCustomerByPhone(string phone)
+        {
+            Customer foundCustomer;
+            //
+            string queryString = "select id, firstName, lastName, email, phone from Customer where phone = @Phone";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, con))
+            {
+                // Prepace SQL
+                SqlParameter idParam = new SqlParameter("@Phone", phone);
+                readCommand.Parameters.Add(idParam);
+                //
+                con.Open();
+                // Execute read
+                SqlDataReader customerReader = readCommand.ExecuteReader();
+                foundCustomer = new Customer();
+                while (customerReader.Read())
+                {
+                    foundCustomer = GetCustomerFromReader(customerReader);
+                }
+            }
+            return foundCustomer;
+        }
+
 
     }
 

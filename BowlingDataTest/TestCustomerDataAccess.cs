@@ -36,7 +36,7 @@ namespace BowlingDataTest
         }
 
         [Fact]
-        public void TestCreateLane()
+        public void TestCreateCustomer()
         {
             // Arrange
             Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678"); // Create a new Lane object
@@ -46,6 +46,7 @@ namespace BowlingDataTest
             
             // Assert
             Assert.True(insertedId > 0);
+            _CustomerAccess.DeleteCustomerById(insertedId);
         }
 
         [Fact]
@@ -62,6 +63,23 @@ namespace BowlingDataTest
             Assert.NotNull(retrievedCustomer);
             Assert.Equal(insertedId, retrievedCustomer.Id);
             Assert.Equal(actualyFN, retrievedCustomer.FirstName);
+            _CustomerAccess.DeleteCustomerById(insertedId);
+        }
+        [Fact]
+        public void TestGetCustomerByPhone()
+        {
+            // Arrange
+            string actualyFN = "Karl";
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678"); // Create a new Lane object
+            int insertedId = _CustomerAccess.CreateCustomer(cus); // Insert the Lane into the database
+            // Act
+            Customer retrievedCustomer = _CustomerAccess.GetCustomerByPhone(cus.Phone);
+
+            // Assert
+            Assert.NotNull(retrievedCustomer);
+            Assert.Equal(insertedId, retrievedCustomer.Id);
+            Assert.Equal(actualyFN, retrievedCustomer.FirstName);
+            _CustomerAccess.DeleteCustomerById(insertedId);
         }
 
         [Fact]
@@ -102,6 +120,7 @@ namespace BowlingDataTest
             Assert.Equal(updatedCustomer.LastName, retrievedCustomer.LastName);
             Assert.Equal(updatedCustomer.Email, retrievedCustomer.Email);
             Assert.Equal(updatedCustomer.Phone, retrievedCustomer.Phone);
+            _CustomerAccess.DeleteCustomerById(insertedId);
         }
     }
 }
