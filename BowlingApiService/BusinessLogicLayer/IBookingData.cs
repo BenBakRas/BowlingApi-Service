@@ -9,6 +9,6 @@ namespace BowlingApiService.BusinessLogicLayer
         int Add(BookingDto bookingToAdd);
         bool Put(BookingDto bookingToUpdate, int idToUpdate);
         bool Delete(int id);
-        public List<BookingDto>? GetBookingsByCustomerId(int customerId);
+        List<BookingDto>? GetBookingsByCustomerPhone(string phoneNumber);
     }
 }

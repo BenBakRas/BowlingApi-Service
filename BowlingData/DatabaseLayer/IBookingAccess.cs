@@ -9,7 +9,7 @@ namespace BowlingData.DatabaseLayer
 {
     public interface IBookingAccess
     {
-        List<Booking> GetBookingsByCId(int customerID);
+        List<Booking> GetBookingsByCustomerPhone(string phone);
         Booking GetBookingById(int id);
         List<Booking> GetAllBookings();
         int CreateBooking(Booking aBooking);
@@ -17,6 +17,8 @@ namespace BowlingData.DatabaseLayer
         bool DeleteBookingById(int id);
         bool CreatePriceBooking(int priceId, int bookingId);
         bool CreateLaneBooking(int laneId, int bookingId);
+
+
 
     }
 }

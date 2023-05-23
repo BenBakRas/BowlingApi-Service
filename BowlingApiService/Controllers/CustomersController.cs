@@ -42,28 +42,6 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-
-
-        /*// URL: api/customers/{id}
-        [HttpGet, Route("{id}")]
-        public ActionResult<CustomerDto> Get(int id)
-        {
-            ActionResult<CustomerDto> foundReturn;
-            // retrieve data - converted to DTO
-            CustomerDto? foundCustomer = _businessLogicCtrl.Get(id);
-            // evaluate
-            if (foundCustomer != null)
-            {
-                foundReturn = Ok(foundCustomer);       // Statuscode 200
-            }
-            else
-            {
-                foundReturn = new StatusCodeResult(404);    // Not found
-            }
-            // send response back to client
-            return foundReturn;
-        }*/
-
         // URL: api/customers
         [HttpPost]
         public ActionResult<int> PostNewCustomer(CustomerDto inCustomerDto)

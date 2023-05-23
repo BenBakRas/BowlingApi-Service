@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace BowlingData.DatabaseLayer
 {
@@ -116,7 +117,52 @@ namespace BowlingData.DatabaseLayer
 
             return foundBooking;
         }
+        public List<Booking> GetBookingsByCustomerPhone(string phone)
+        {
+            List<Booking> bookings = new List<Booking>();
 
+            try
+            {
+                using (SqlConnection con = new SqlConnection(_connectionString))
+                {
+                    string queryString = "SELECT b.*, c.* FROM Booking b INNER JOIN Customer c ON b.CustomerID = c.id WHERE phone = @Phone";
+                    SqlCommand command = new SqlCommand(queryString, con);
+                    command.Parameters.AddWithValue("@Phone", phone);
+
+                    con.Open();
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Booking booking = new Booking
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            StartDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime")),
+                            HoursToPlay = reader.GetInt32(reader.GetOrdinal("HoursToPlay")),
+                            NoOfPlayers = reader.GetInt32(reader.GetOrdinal("NoOfPlayers")),
+                            Customer = new Customer
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("customerID")),
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                Email = reader.GetString(reader.GetOrdinal("Email")),
+                                Phone = reader.GetString(reader.GetOrdinal("Phone"))
+                            }
+                        };
+                        bookings.Add(booking);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception appropriately or log the error
+                Console.WriteLine($"An error occurred while retrieving bookings for customer phone {phone}: {ex.Message}");
+                return null;
+            }
+
+            return bookings;
+        }
         public List<Booking> GetBookingsByCId(int customerId)
         {
             List<Booking> bookings = new List<Booking>();

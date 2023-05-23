@@ -30,19 +30,6 @@ namespace BowlingData.ModelLayer
         {
             Id = id;
         }
-        //Checks if customer is empty
-        public bool IsCustomerEmpty
-        {
-            get
-            {
-                bool customerIsEmpty = false;
-                if (String.IsNullOrWhiteSpace(FirstName) || String.IsNullOrWhiteSpace(LastName))
-                {
-                    customerIsEmpty = true;
-                }
-                return customerIsEmpty;
-            }
-        }
 
     }
 }

@@ -89,20 +89,22 @@ namespace BowlingApiService.BusinessLogicLayer
             }
 
         }
-        public List<BookingDto>? GetBookingsByCustomerId(int customerId)
+        public List<BookingDto>? GetBookingsByCustomerPhone(string phoneNumber)
         {
             List<BookingDto>? foundDtos;
             try
             {
-                List<Booking>? foundBookings = _bookingAccess.GetBookingsByCId(customerId);
-                foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
-            }
+                  List<Booking>? foundBookings = _bookingAccess.GetBookingsByCustomerPhone(phoneNumber);
+                  foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
+                }
+               
             catch
             {
                 foundDtos = null;
             }
             return foundDtos;
         }
+ 
     }
 
-    }
+}

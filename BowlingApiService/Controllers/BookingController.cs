@@ -42,7 +42,7 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-        // URL: api/bookings/{customerID}
+        /*// URL: api/bookings/{customerID}
         [HttpGet("customer/{customerId}")]
         public ActionResult<List<BookingDto>> GetBookingsByCustomerId(int customerId)
         {
@@ -67,7 +67,7 @@ namespace BowlingApiService.Controllers
             }
 
             return foundReturn;
-        }
+        }*/
         /*
         // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
@@ -163,6 +163,32 @@ namespace BowlingApiService.Controllers
             {
                 return StatusCode(500); // Internal server error
             }
+        }
+        // URL: api/bookings/customer/phone/{phoneNumber}
+        [HttpGet("customer/phone/{phoneNumber}")]
+        public ActionResult<List<BookingDto>> GetBookingsByCustomerPhone(string phoneNumber)
+        {
+            ActionResult<List<BookingDto>> foundReturn;
+            // retrieve data - converted to DTO
+            List<BookingDto>? foundBookings = _businessLogicCtrl.GetBookingsByCustomerPhone(phoneNumber);
+            // evaluate
+            if (foundBookings != null)
+            {
+                if (foundBookings.Count > 0)
+                {
+                    foundReturn = Ok(foundBookings);                 // Statuscode 200
+                }
+                else
+                {
+                    foundReturn = new StatusCodeResult(204);    // Ok, but no content
+                }
+            }
+            else
+            {
+                foundReturn = new StatusCodeResult(500);        // Internal server error
+            }
+
+            return foundReturn;
         }
     }
 }
