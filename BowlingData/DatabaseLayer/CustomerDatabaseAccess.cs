@@ -141,8 +141,6 @@ namespace BowlingData.DatabaseLayer
             }
             
         }
-
-
         private Customer GetCustomerFromReader(SqlDataReader customerReader)
         {
             Customer foundCustomer;

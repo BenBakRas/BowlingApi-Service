@@ -66,6 +66,15 @@ namespace BowlingApiService.BusinessLogicLayer
             {
                 List<Customer>? foundCustomers = _customerAccess.GetAllCustomers();
                 foundDtos = ModelConversion.CustomerDtoConvert.FromCustomerCollection(foundCustomers);
+
+                if (foundDtos != null)
+                {
+                    foreach (var dto in foundDtos)
+                    {
+                        Customer cus = _customerAccess.GetCustomerByPhone(dto.Phone);
+                        dto.Id = cus.Id;
+                    }
+                }
             }
             catch
             {
@@ -95,6 +104,11 @@ namespace BowlingApiService.BusinessLogicLayer
             {
                 Customer? foundCustomer = _customerAccess.GetCustomerByPhone(phone);
                 foundCustomerDto = ModelConversion.CustomerDtoConvert.FromCustomer(foundCustomer);
+
+                if (foundCustomer != null)
+                {
+                    foundCustomerDto.Id = foundCustomer.Id;
+                }
             }
             catch
             {
@@ -102,5 +116,6 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return foundCustomerDto;
         }
+       
     }
 }

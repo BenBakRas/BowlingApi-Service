@@ -28,7 +28,7 @@ namespace BowlingApiService.Controllers
             {
                 if (foundCustomers.Count > 0)
                 {
-                    foundReturn = Ok(foundCustomers);                 // Statuscode 200
+                    foundReturn = Ok(foundCustomers);
                 }
                 else
                 {
@@ -42,6 +42,7 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
+
         // URL: api/customers
         [HttpPost]
         public ActionResult<int> PostNewCustomer(CustomerDto inCustomerDto)
@@ -123,20 +124,18 @@ namespace BowlingApiService.Controllers
         [HttpGet, Route("{phone}")]
         public ActionResult<CustomerDto> Get(string phone)
         {
-            ActionResult<CustomerDto> foundReturn;
-            // retrieve data - converted to DTO
             CustomerDto? foundCustomer = _businessLogicCtrl.Get(phone);
-            // evaluate
+
             if (foundCustomer != null)
             {
-                foundReturn = Ok(foundCustomer);       // Statuscode 200
+                // Include customer ID in the response headers
+                Response.Headers.Add("CustomerId", foundCustomer.Id.ToString());
+                return Ok(foundCustomer);       // Status code 200
             }
             else
             {
-                foundReturn = new StatusCodeResult(404);    // Not found
+                return NotFound();    // Status code 404
             }
-            // send response back to client
-            return foundReturn;
         }
 
     }
