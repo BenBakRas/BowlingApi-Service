@@ -2,6 +2,8 @@
 using BowlingData.DatabaseLayer;
 using Microsoft.AspNetCore.Mvc;
 using BowlingData.ModelLayer;
+using BowlingApiService.ModelConversion;
+using System.Diagnostics.Metrics;
 
 namespace BowlingApiService.BusinessLogicLayer
 {
@@ -13,7 +15,7 @@ namespace BowlingApiService.BusinessLogicLayer
         {
             _bookingAccess = inBookingAccess;
         }
-
+        /*
         public int Add(BookingDto newBooking)
         {
             int insertedId = 0;
@@ -31,7 +33,7 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return insertedId;
         }
-
+        */
         public bool Delete(int id)
         {
             try
@@ -45,13 +47,20 @@ namespace BowlingApiService.BusinessLogicLayer
             }
         }
 
-      public BookingDto? Get(int id)
+        public BookingDto? Get(int id)
         {
             BookingDto? foundBookingDto;
             try
             {
                 Booking? foundBooking = _bookingAccess.GetBookingById(id);
-                foundBookingDto = ModelConversion.BookingDtoConvert.FromBooking(foundBooking);
+                foundBookingDto = BookingDtoConvert.FromBooking(foundBooking);
+
+                // Retrieve Price and Lane information from their respective tables
+                if (foundBooking != null)
+                {
+                    foundBookingDto.PriceId = foundBooking.PriceId;
+                    foundBookingDto.LaneId = foundBooking.LaneId;
+                }
             }
             catch
             {
@@ -59,7 +68,6 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return foundBookingDto;
         }
-
         public List<BookingDto>? Get()
         {
             List<BookingDto>? foundDtos;
@@ -104,7 +112,37 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return foundDtos;
         }
- 
+        public int Add(BookingDto newBooking)
+        {
+            int insertedId = 0;
+            try
+            {
+                Booking? foundBooking = ModelConversion.BookingDtoConvert.ToBooking(newBooking);
+                if (foundBooking != null)
+                {
+                    insertedId = _bookingAccess.CreateBooking(foundBooking);
+
+                    // Create the price booking
+                    bool priceBookingCreated = _bookingAccess.CreatePriceBooking(newBooking.PriceId, insertedId);
+
+                    // Create the lane booking
+                    bool laneBookingCreated = _bookingAccess.CreateLaneBooking(newBooking.LaneId, insertedId);
+
+                    // Check if both price and lane bookings were created successfully
+                    if (!priceBookingCreated || !laneBookingCreated)
+                    {
+                        // Handle the error, such as rolling back the database transaction or removing the created booking
+                        // Set insertedId to -1 or throw an exception to indicate a failure
+                    }
+                }
+            }
+            catch
+            {
+                insertedId = -1;
+            }
+            return insertedId;
+        }
+
     }
 
 }

@@ -18,7 +18,5 @@ namespace BowlingData.DatabaseLayer
         bool CreatePriceBooking(int priceId, int bookingId);
         bool CreateLaneBooking(int laneId, int bookingId);
 
-
-
     }
 }

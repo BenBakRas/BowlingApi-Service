@@ -8,6 +8,8 @@ namespace BowlingApiService.DTOs
         public int HoursToPlay { get; set; }
         public Customer? Customer { get; set; }
         public int NoOfPlayers { get; set; }
+        public int PriceId { get; set; } 
+        public int LaneId { get; set; } 
 
         // Empty constructor
         public BookingDto() { }

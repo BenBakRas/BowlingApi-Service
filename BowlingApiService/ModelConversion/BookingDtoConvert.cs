@@ -1,6 +1,7 @@
 ﻿using BowlingApiService.DTOs;
 using BowlingData.ModelLayer;
 using System;
+using System.Transactions;
 
 namespace BowlingApiService.ModelConversion
 {
@@ -44,6 +45,8 @@ namespace BowlingApiService.ModelConversion
             if (inDto != null)
             {
                 aBooking = new Booking(inDto.StartDateTime, inDto.HoursToPlay, inDto.NoOfPlayers, inDto.Customer);
+                aBooking.PriceId = inDto.PriceId;
+                aBooking.LaneId = inDto.LaneId;
                 aBooking.Id = idToUpdate;
             }
             return aBooking;
@@ -55,6 +58,8 @@ namespace BowlingApiService.ModelConversion
             if (inDto != null)
             {
                 aBooking = new Booking(inDto.StartDateTime, inDto.HoursToPlay, inDto.NoOfPlayers, inDto.Customer);
+                aBooking.PriceId = inDto.PriceId;
+                aBooking.LaneId = inDto.LaneId;
             }
             return aBooking;
         }

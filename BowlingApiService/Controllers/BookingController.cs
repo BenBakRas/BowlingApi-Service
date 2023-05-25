@@ -68,7 +68,7 @@ namespace BowlingApiService.Controllers
 
             return foundReturn;
         }*/
-        /*
+        
         // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
         public ActionResult<BookingDto> Get(int id)
@@ -87,7 +87,8 @@ namespace BowlingApiService.Controllers
             }
             // send response back to client
             return foundReturn;
-        }*/
+        }
+
 
         // URL: api/bookings
         [HttpPost]
@@ -97,7 +98,18 @@ namespace BowlingApiService.Controllers
             int insertedId = -1;
             if (inBookingDto != null)
             {
-                insertedId = _businessLogicCtrl.Add(inBookingDto);
+                // Map the NewBookingDto to BookingDto
+                BookingDto bookingDto = new BookingDto
+                {
+                    StartDateTime = inBookingDto.StartDateTime,
+                    HoursToPlay = inBookingDto.HoursToPlay,
+                    NoOfPlayers = inBookingDto.NoOfPlayers,
+                    Customer = inBookingDto.Customer,
+                    PriceId = inBookingDto.PriceId,
+                    LaneId = inBookingDto.LaneId
+                };
+
+                insertedId = _businessLogicCtrl.Add(bookingDto);
             }
             // Evaluate
             if (insertedId > 0)

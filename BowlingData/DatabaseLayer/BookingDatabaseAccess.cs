@@ -93,30 +93,6 @@ namespace BowlingData.DatabaseLayer
 
             return foundBookings;
         }
-
-        public Booking GetBookingById(int id)
-        {
-            Booking foundBooking;
-            string queryString = "SELECT id, hoursToPlay, startDateTime, noOfPlayers, customerID FROM Booking WHERE Id = @Id";
-
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand readCommand = new SqlCommand(queryString, con))
-            {
-                SqlParameter idParam = new SqlParameter("@Id", id);
-                readCommand.Parameters.Add(idParam);
-
-                con.Open();
-                SqlDataReader bookingReader = readCommand.ExecuteReader();
-                foundBooking = new Booking();
-
-                while (bookingReader.Read())
-                {
-                    foundBooking = GetBookingFromReader(bookingReader);
-                }
-            }
-
-            return foundBooking;
-        }
         public List<Booking> GetBookingsByCustomerPhone(string phone)
         {
             List<Booking> bookings = new List<Booking>();
@@ -306,6 +282,51 @@ namespace BowlingData.DatabaseLayer
 
             return isCreated;
         }
+        public Booking GetBookingById(int id)
+        {
+            Booking foundBooking;
+            string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, pb.PriceId
+                           FROM Booking AS b
+                           JOIN LaneBooking AS lb ON b.Id = lb.BookingId
+                           JOIN PriceBooking AS pb ON b.Id = pb.BookingId
+                           JOIN Customer AS c ON b.customerID = c.Id
+                           WHERE b.Id = @Id";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand readCommand = new SqlCommand(queryString, con))
+            {
+                readCommand.Parameters.AddWithValue("@Id", id);
+
+                con.Open();
+                SqlDataReader bookingReader = readCommand.ExecuteReader();
+                foundBooking = null;
+
+                while (bookingReader.Read())
+                {
+                    foundBooking = new Booking
+                    {
+                        Id = bookingReader.GetInt32(bookingReader.GetOrdinal("Id")),
+                        HoursToPlay = bookingReader.GetInt32(bookingReader.GetOrdinal("hoursToPlay")),
+                        StartDateTime = bookingReader.GetDateTime(bookingReader.GetOrdinal("startDateTime")),
+                        NoOfPlayers = bookingReader.GetInt32(bookingReader.GetOrdinal("noOfPlayers")),
+                    };
+
+                    Customer cus = new Customer();
+                    cus.Id = bookingReader.GetInt32(bookingReader.GetOrdinal("CustomerId"));
+                    cus.FirstName = bookingReader.GetString(bookingReader.GetOrdinal("FirstName"));
+                    cus.LastName = bookingReader.GetString(bookingReader.GetOrdinal("LastName"));
+                    cus.Email = bookingReader.GetString(bookingReader.GetOrdinal("Email"));
+                    cus.Phone = bookingReader.GetString(bookingReader.GetOrdinal("Phone"));
+                    foundBooking.Customer = cus;
+
+                    foundBooking.PriceId = bookingReader.GetInt32(bookingReader.GetOrdinal("PriceId"));
+                    foundBooking.LaneId = bookingReader.GetInt32(bookingReader.GetOrdinal("LaneId"));
+                }
+            }
+
+            return foundBooking;
+        }
 
     }
+
 }
