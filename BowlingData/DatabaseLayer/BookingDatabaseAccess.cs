@@ -31,22 +31,52 @@ namespace BowlingData.DatabaseLayer
             string insertString = "INSERT INTO Booking (startDateTime, hoursToPlay, customerID, noOfPlayers) OUTPUT INSERTED.ID VALUES (@StartDateTime, @HoursToPlay, @Customer, @NoOfPlayers)";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand createCommand = new SqlCommand(insertString, con))
             {
-                SqlParameter startDateTimeParam = new SqlParameter("@StartDateTime", aBooking.StartDateTime);
-                createCommand.Parameters.Add(startDateTimeParam);
-
-                SqlParameter hoursToPlayParam = new SqlParameter("@HoursToPlay", aBooking.HoursToPlay);
-                createCommand.Parameters.Add(hoursToPlayParam);
-
-                SqlParameter CustomerNumberParam = new SqlParameter("@Customer", aBooking.Customer.Id);
-                createCommand.Parameters.Add(CustomerNumberParam);
-
-                SqlParameter noOfPlayersParam = new SqlParameter("@NoOfPlayers", aBooking.NoOfPlayers);
-                createCommand.Parameters.Add(noOfPlayersParam);
-
                 con.Open();
-                insertedId = (int)createCommand.ExecuteScalar();
+
+                // Check lane availability and acquire a lock on the selected lane
+                int availableLaneId;
+                bool isLaneAvailable = IsLaneAvailable(aBooking.StartDateTime, aBooking.HoursToPlay, out availableLaneId);
+
+                if (!isLaneAvailable)
+                {
+                    // Lane is not available
+                    throw new Exception("The selected lane is not available for the specified time.");
+                }
+
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
+                {
+                    try
+                    {
+                        // Set the transaction for the command
+                        SqlCommand createCommand = new SqlCommand(insertString, con, transaction);
+
+                        SqlParameter startDateTimeParam = new SqlParameter("@StartDateTime", aBooking.StartDateTime);
+                        createCommand.Parameters.Add(startDateTimeParam);
+
+                        SqlParameter hoursToPlayParam = new SqlParameter("@HoursToPlay", aBooking.HoursToPlay);
+                        createCommand.Parameters.Add(hoursToPlayParam);
+
+                        SqlParameter CustomerNumberParam = new SqlParameter("@Customer", aBooking.Customer.Id);
+                        createCommand.Parameters.Add(CustomerNumberParam);
+
+                        SqlParameter noOfPlayersParam = new SqlParameter("@NoOfPlayers", aBooking.NoOfPlayers);
+                        createCommand.Parameters.Add(noOfPlayersParam);
+
+                        // Execute the insert command within the transaction
+                        insertedId = (int)createCommand.ExecuteScalar();
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
 
             return insertedId;
@@ -325,6 +355,65 @@ namespace BowlingData.DatabaseLayer
             }
 
             return foundBooking;
+        }
+
+        private bool IsLaneAvailable(DateTime startDateTime, int hoursToPlay, out int availableLaneId)
+        {
+            DateTime endDateTime = startDateTime.AddHours(hoursToPlay);
+
+            string query = @"
+        WITH AvailableLanes AS (
+            SELECT L.Id AS LaneID
+            FROM Lane L
+            LEFT JOIN LaneBooking LB ON L.Id = LB.LaneID
+            LEFT JOIN Booking B ON LB.BookingID = B.Id
+            WHERE NOT EXISTS (
+                SELECT 1
+                FROM LaneBooking LB2
+                JOIN Booking B2 ON LB2.BookingID = B2.Id
+                WHERE LB2.LaneID = L.Id
+                AND B2.StartDateTime <= @EndDateTime
+                AND DATEADD(HOUR, B2.HoursToPlay, B2.StartDateTime) >= @StartDateTime
+            )
+        )
+        SELECT TOP 1 LaneID
+        FROM AvailableLanes
+        ORDER BY NEWID()";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand(query, con))
+            {
+                command.Parameters.AddWithValue("@StartDateTime", startDateTime);
+                command.Parameters.AddWithValue("@EndDateTime", endDateTime);
+
+                con.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    availableLaneId = reader.GetInt32(0);
+                    return true;
+                }
+            }
+
+            availableLaneId = -1;
+            return false;
+        }
+        //Find the speicifc day of the week
+        private string GetBookingStartDay(int bookingId)
+        {
+            string selectStartDayQuery = "SELECT DATENAME(weekday, StartDateTime) AS StartDay FROM Booking WHERE Id = @BookingId";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(selectStartDayQuery, con))
+            {
+                selectCommand.Parameters.AddWithValue("@BookingId", bookingId);
+
+                con.Open();
+                string startDay = (string)selectCommand.ExecuteScalar();
+
+                return startDay;
+            }
         }
 
     }

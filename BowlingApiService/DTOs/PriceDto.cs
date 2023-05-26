@@ -7,14 +7,12 @@
         public PriceDto() { }
 
         // Constructor with parameters
-        public PriceDto(double? normalPrice, double? specialPrice, string? weekday)
+        public PriceDto(double? normalPrice, string? weekday)
         {
             NormalPrice = normalPrice;
-            SpecialPrice = specialPrice;
             Weekday = weekday;
         }
         public double? NormalPrice { get; set; }
-        public double? SpecialPrice { get; set; }
         public string? Weekday { get; set; }
     }
 }

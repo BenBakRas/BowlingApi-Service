@@ -27,14 +27,12 @@ namespace BowlingData.DatabaseLayer
         {
             int insertedId = -1;
             //
-            string insertString = "insert into Price(normalPrice, specialPrice, weekday) OUTPUT INSERTED.ID values(@NormalPrice, @SpecialPrice, @Weekday)";
+            string insertString = "insert into Price(normalPrice, weekday) OUTPUT INSERTED.ID values(@NormalPrice, @Weekday)";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand CreateCommand = new SqlCommand(insertString, con))
             {
                 SqlParameter aNPParam = new("@NormalPrice", aPrice.NormalPrice);
                 CreateCommand.Parameters.Add(aNPParam);
-                SqlParameter aSPParam = new("@specialPrice", aPrice.SpecialPrice);
-                CreateCommand.Parameters.Add(aSPParam);
                 SqlParameter aWDParam = new("@weekday", aPrice.Weekday);
                 CreateCommand.Parameters.Add(aWDParam);
                 con.Open();
@@ -68,7 +66,7 @@ namespace BowlingData.DatabaseLayer
             List<Price> foundPrices;
             Price readPrice;
             //
-            string queryString = "select Id, NormalPrice, SpecialPrice, Weekday from Price";
+            string queryString = "select Id, NormalPrice, Weekday from Price";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
@@ -90,7 +88,7 @@ namespace BowlingData.DatabaseLayer
         {
             Price foundPrice;
             //
-            string queryString = "select Id, NormalPrice, SpecialPrice, Weekday from Price where Id = @Id";
+            string queryString = "select Id, NormalPrice, Weekday from Price where Id = @Id";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
@@ -113,14 +111,13 @@ namespace BowlingData.DatabaseLayer
         public bool UpdatePrice(Price priceToUpdate)
         {
             bool isUpdated = false;
-            string updateString = "UPDATE Price SET NormalPrice = @NormalPrice, SpecialPrice = @SpecialPrice, Weekday = @Weekday WHERE id = @Id";
+            string updateString = "UPDATE Price SET NormalPrice = @NormalPrice, Weekday = @Weekday WHERE id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand updateCommand = new SqlCommand(updateString, con))
             {
                 updateCommand.Parameters.AddWithValue("@Id", priceToUpdate.Id);
                 updateCommand.Parameters.AddWithValue("@NormalPrice", priceToUpdate.NormalPrice);
-                updateCommand.Parameters.AddWithValue("@SpecialPrice", priceToUpdate.SpecialPrice);
                 updateCommand.Parameters.AddWithValue("@Weekday", priceToUpdate.Weekday);
 
                 con.Open();
@@ -141,15 +138,14 @@ namespace BowlingData.DatabaseLayer
         {
             Price foundPrice;
             int tempID;
-            double tempNormalPrice, tempSpecialPrice;
+            double tempNormalPrice¨;
             string tempWeekDay;
             // Fetch values
             tempID = priceReader.GetInt32(priceReader.GetOrdinal("Id"));
             tempNormalPrice = priceReader.GetDouble(priceReader.GetOrdinal("NormalPrice"));
-            tempSpecialPrice = priceReader.GetDouble(priceReader.GetOrdinal("SpecialPrice"));
             tempWeekDay = priceReader.GetString(priceReader.GetOrdinal("Weekday"));
             //Create Price object
-            foundPrice = new Price(tempID, tempNormalPrice, tempSpecialPrice, tempWeekDay);
+            foundPrice = new Price(tempID, tempNormalPrice, tempWeekDay);
             return foundPrice;
         }
 

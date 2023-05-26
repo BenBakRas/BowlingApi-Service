@@ -31,7 +31,7 @@ namespace BowlingApiService.ModelConversion
             PriceDto? priceDto = null;
             if (inPrice != null)
             {
-                priceDto = new PriceDto(inPrice.NormalPrice, inPrice.SpecialPrice, inPrice.Weekday);
+                priceDto = new PriceDto(inPrice.NormalPrice, inPrice.Weekday);
             }
             return priceDto;
         }
@@ -42,7 +42,7 @@ namespace BowlingApiService.ModelConversion
             Price? price = null;
             if (inDto != null)
             {
-                price = new Price(inDto.NormalPrice, inDto.SpecialPrice, inDto.Weekday);
+                price = new Price(inDto.NormalPrice, inDto.Weekday);
             }
             return price;
         }
@@ -51,7 +51,7 @@ namespace BowlingApiService.ModelConversion
             Price? aPrice = null;
             if (inDto != null)
             {
-                aPrice = new Price(inDto.NormalPrice, inDto.SpecialPrice, inDto.Weekday);
+                aPrice = new Price(inDto.NormalPrice, inDto.Weekday);
                 aPrice.Id = idToUpdate;
             }
             return aPrice;

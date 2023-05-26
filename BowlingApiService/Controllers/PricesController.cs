@@ -127,7 +127,6 @@ namespace BowlingApiService.Controllers
 
             // Update the existing price details with the new values
             existingPriceDto.NormalPrice = updatedPriceDto.NormalPrice;
-            existingPriceDto.SpecialPrice = updatedPriceDto.SpecialPrice;
             existingPriceDto.Weekday = updatedPriceDto.Weekday;
 
             bool isUpdated = _businessLogicCtrl.Put(existingPriceDto, id);
