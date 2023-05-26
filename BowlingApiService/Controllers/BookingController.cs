@@ -79,6 +79,7 @@ namespace BowlingApiService.Controllers
             // evaluate
             if (foundBooking != null)
             {
+                Response.Headers.Add("Id", foundBooking.Id.ToString());
                 foundReturn = Ok(foundBooking);       // Statuscode 200
             }
             else

@@ -10,6 +10,7 @@ namespace BowlingApiService.DTOs
         public int NoOfPlayers { get; set; }
         public int PriceId { get; set; } 
         public int LaneId { get; set; } 
+        public int Id { get; set; }
 
         // Empty constructor
         public BookingDto() { }
@@ -21,6 +22,11 @@ namespace BowlingApiService.DTOs
             HoursToPlay = inHoursToPlay;
             NoOfPlayers = inNoOfPlayers;
             Customer = customer;
+        }
+        public BookingDto(int inId, DateTime startDateTime, int hoursToPlay, int noOfPlayers, Customer? customer) : this(startDateTime, hoursToPlay, noOfPlayers, customer)
+
+        {
+            Id = inId;
         }
     }
 }

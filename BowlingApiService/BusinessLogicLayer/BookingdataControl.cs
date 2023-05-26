@@ -69,12 +69,27 @@ namespace BowlingApiService.BusinessLogicLayer
             return foundBookingDto;
         }
         public List<BookingDto>? Get()
-        {
+{
             List<BookingDto>? foundDtos;
             try
             {
                 List<Booking>? foundBookings = _bookingAccess.GetAllBookings();
                 foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
+
+                // Retrieve Price and Lane information from their respective tables
+                if (foundDtos != null)
+                {
+                    for (int i = 0; i < foundDtos.Count; i++)
+                    {
+                        Booking? foundBooking = foundBookings.ElementAtOrDefault(i);
+                        if (foundBooking != null)
+                        {
+                            foundDtos[i].PriceId = foundBooking.PriceId;
+                            foundDtos[i].LaneId = foundBooking.LaneId;
+                            foundDtos[i].Id = foundBooking.Id;
+                        }
+                    }
+                }
             }
             catch
             {
@@ -82,6 +97,7 @@ namespace BowlingApiService.BusinessLogicLayer
             }
             return foundDtos;
         }
+    
         public bool Put(BookingDto bookingToUpdate, int idToUpdate)
         {
             try
@@ -102,10 +118,22 @@ namespace BowlingApiService.BusinessLogicLayer
             List<BookingDto>? foundDtos;
             try
             {
-                  List<Booking>? foundBookings = _bookingAccess.GetBookingsByCustomerPhone(phoneNumber);
-                  foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
+                List<Booking>? foundBookings = _bookingAccess.GetBookingsByCustomerPhone(phoneNumber);
+                foundDtos = ModelConversion.BookingDtoConvert.FromBookingCollection(foundBookings);
+
+                // Assign the booking ID to each BookingDto
+                if (foundDtos != null)
+                {
+                    for (int i = 0; i < foundDtos.Count; i++)
+                    {
+                        Booking? foundBooking = foundBookings.ElementAtOrDefault(i);
+                        if (foundBooking != null)
+                        {
+                            foundDtos[i].Id = foundBooking.Id;
+                        }
+                    }
                 }
-               
+            }
             catch
             {
                 foundDtos = null;
