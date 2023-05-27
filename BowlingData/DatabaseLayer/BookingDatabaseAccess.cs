@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Transactions;
 
 namespace BowlingData.DatabaseLayer
 {
@@ -28,7 +29,8 @@ namespace BowlingData.DatabaseLayer
         public int CreateBooking(Booking aBooking)
         {
             int insertedId = -1;
-            string insertString = "INSERT INTO Booking (startDateTime, hoursToPlay, customerID, noOfPlayers) OUTPUT INSERTED.ID VALUES (@StartDateTime, @HoursToPlay, @Customer, @NoOfPlayers)";
+            string insertBookingString = "INSERT INTO Booking (startDateTime, hoursToPlay, customerID, noOfPlayers) " +
+                                         "OUTPUT INSERTED.ID VALUES (@StartDateTime, @HoursToPlay, @Customer, @NoOfPlayers)";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
@@ -50,22 +52,22 @@ namespace BowlingData.DatabaseLayer
                     try
                     {
                         // Set the transaction for the command
-                        SqlCommand createCommand = new SqlCommand(insertString, con, transaction);
+                        SqlCommand createBookingCommand = new SqlCommand(insertBookingString, con, transaction);
 
                         SqlParameter startDateTimeParam = new SqlParameter("@StartDateTime", aBooking.StartDateTime);
-                        createCommand.Parameters.Add(startDateTimeParam);
+                        createBookingCommand.Parameters.Add(startDateTimeParam);
 
                         SqlParameter hoursToPlayParam = new SqlParameter("@HoursToPlay", aBooking.HoursToPlay);
-                        createCommand.Parameters.Add(hoursToPlayParam);
+                        createBookingCommand.Parameters.Add(hoursToPlayParam);
 
-                        SqlParameter CustomerNumberParam = new SqlParameter("@Customer", aBooking.Customer.Id);
-                        createCommand.Parameters.Add(CustomerNumberParam);
+                        SqlParameter customerNumberParam = new SqlParameter("@Customer", aBooking.Customer.Id);
+                        createBookingCommand.Parameters.Add(customerNumberParam);
 
                         SqlParameter noOfPlayersParam = new SqlParameter("@NoOfPlayers", aBooking.NoOfPlayers);
-                        createCommand.Parameters.Add(noOfPlayersParam);
+                        createBookingCommand.Parameters.Add(noOfPlayersParam);
 
-                        // Execute the insert command within the transaction
-                        insertedId = (int)createCommand.ExecuteScalar();
+                        // Execute the insert command within the transaction and retrieve the inserted booking ID
+                        insertedId = (int)createBookingCommand.ExecuteScalar();
 
                         // Commit the transaction
                         transaction.Commit();
@@ -76,6 +78,8 @@ namespace BowlingData.DatabaseLayer
                         transaction.Rollback();
                         throw;
                     }
+                    // Insert the lane ID into the LaneBooking table
+                    CreateLaneBooking(availableLaneId, insertedId);
                 }
             }
 
@@ -117,6 +121,13 @@ namespace BowlingData.DatabaseLayer
                 while (bookingReader.Read())
                 {
                     readBooking = GetBookingFromReader(bookingReader);
+                    //Finds the priceID and laneID
+                    string startDay = GetBookingStartDay(readBooking.Id);
+                    int priceID = GetPriceIdByWeekday(startDay);
+                    int laneID = GetLaneIdByBookingId(readBooking.Id);
+                    //Adds the id's to the booking.
+                    readBooking.LaneId = laneID;
+                    readBooking.PriceId = priceID;
                     foundBookings.Add(readBooking);
                 }
             }
@@ -274,25 +285,6 @@ namespace BowlingData.DatabaseLayer
 
             return null; // Customer not found
         }
-        public bool CreatePriceBooking(int priceId, int bookingId)
-        {
-            bool isCreated = false;
-            string insertString = "INSERT INTO PriceBooking (PriceId, BookingId) VALUES (@PriceId, @BookingId)";
-
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand createCommand = new SqlCommand(insertString, con))
-            {
-                createCommand.Parameters.AddWithValue("@PriceId", priceId);
-                createCommand.Parameters.AddWithValue("@BookingId", bookingId);
-
-                con.Open();
-                int rowsAffected = createCommand.ExecuteNonQuery();
-
-                isCreated = (rowsAffected > 0);
-            }
-
-            return isCreated;
-        }
         public bool CreateLaneBooking(int laneId, int bookingId)
         {
             bool isCreated = false;
@@ -314,12 +306,11 @@ namespace BowlingData.DatabaseLayer
         }
         public Booking GetBookingById(int id)
         {
-            Booking foundBooking;
-            string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, pb.PriceId
+            string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, p.Id AS PriceId
                            FROM Booking AS b
                            JOIN LaneBooking AS lb ON b.Id = lb.BookingId
-                           JOIN PriceBooking AS pb ON b.Id = pb.BookingId
                            JOIN Customer AS c ON b.customerID = c.Id
+                           JOIN Price AS p ON p.Weekday = DATENAME(WEEKDAY, b.startDateTime)
                            WHERE b.Id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
@@ -329,32 +320,32 @@ namespace BowlingData.DatabaseLayer
 
                 con.Open();
                 SqlDataReader bookingReader = readCommand.ExecuteReader();
-                foundBooking = null;
 
                 while (bookingReader.Read())
                 {
-                    foundBooking = new Booking
+                    Booking foundBooking = new Booking
                     {
                         Id = bookingReader.GetInt32(bookingReader.GetOrdinal("Id")),
                         HoursToPlay = bookingReader.GetInt32(bookingReader.GetOrdinal("hoursToPlay")),
                         StartDateTime = bookingReader.GetDateTime(bookingReader.GetOrdinal("startDateTime")),
                         NoOfPlayers = bookingReader.GetInt32(bookingReader.GetOrdinal("noOfPlayers")),
+                        Customer = new Customer
+                        {
+                            Id = bookingReader.GetInt32(bookingReader.GetOrdinal("CustomerId")),
+                            FirstName = bookingReader.GetString(bookingReader.GetOrdinal("FirstName")),
+                            LastName = bookingReader.GetString(bookingReader.GetOrdinal("LastName")),
+                            Email = bookingReader.GetString(bookingReader.GetOrdinal("Email")),
+                            Phone = bookingReader.GetString(bookingReader.GetOrdinal("Phone"))
+                        },
+                        PriceId = bookingReader.GetInt32(bookingReader.GetOrdinal("PriceId")),
+                        LaneId = bookingReader.GetInt32(bookingReader.GetOrdinal("LaneId"))
                     };
 
-                    Customer cus = new Customer();
-                    cus.Id = bookingReader.GetInt32(bookingReader.GetOrdinal("CustomerId"));
-                    cus.FirstName = bookingReader.GetString(bookingReader.GetOrdinal("FirstName"));
-                    cus.LastName = bookingReader.GetString(bookingReader.GetOrdinal("LastName"));
-                    cus.Email = bookingReader.GetString(bookingReader.GetOrdinal("Email"));
-                    cus.Phone = bookingReader.GetString(bookingReader.GetOrdinal("Phone"));
-                    foundBooking.Customer = cus;
-
-                    foundBooking.PriceId = bookingReader.GetInt32(bookingReader.GetOrdinal("PriceId"));
-                    foundBooking.LaneId = bookingReader.GetInt32(bookingReader.GetOrdinal("LaneId"));
+                    return foundBooking; // Exit the loop after processing the first row
                 }
             }
 
-            return foundBooking;
+            return null; // Return null if no booking is found
         }
 
         private bool IsLaneAvailable(DateTime startDateTime, int hoursToPlay, out int availableLaneId)
@@ -400,9 +391,10 @@ namespace BowlingData.DatabaseLayer
             return false;
         }
         //Find the speicifc day of the week
-        private string GetBookingStartDay(int bookingId)
+        public string GetBookingStartDay(int bookingId)
         {
-            string selectStartDayQuery = "SELECT DATENAME(weekday, StartDateTime) AS StartDay FROM Booking WHERE Id = @BookingId";
+            string selectStartDayQuery = "SELECT StartDateTime FROM Booking WHERE Id = @BookingId";
+            string startDay = null;
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand selectCommand = new SqlCommand(selectStartDayQuery, con))
@@ -410,12 +402,56 @@ namespace BowlingData.DatabaseLayer
                 selectCommand.Parameters.AddWithValue("@BookingId", bookingId);
 
                 con.Open();
-                string startDay = (string)selectCommand.ExecuteScalar();
-
-                return startDay;
+                using (SqlDataReader reader = selectCommand.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        DateTime startDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime"));
+                        startDay = startDateTime.ToString("dddd");
+                    }
+                }
             }
+
+            return startDay;
         }
 
+        public int GetPriceIdByWeekday(string weekday)
+        {
+            string selectPriceIdQuery = "SELECT Id FROM Price WHERE Weekday = @Weekday";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand selectCommand = new SqlCommand(selectPriceIdQuery, con))
+            {
+                selectCommand.Parameters.AddWithValue("@Weekday", weekday);
+
+                con.Open();
+                int priceId = (int)selectCommand.ExecuteScalar();
+
+                return priceId;
+            }
+        }
+        public int GetLaneIdByBookingId(int bookingId)
+        {
+            int laneId = -1; // Default value if laneId is not found
+
+            string queryString = "SELECT LaneId FROM LaneBooking WHERE BookingId = @BookingId";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand(queryString, con))
+            {
+                command.Parameters.AddWithValue("@BookingId", bookingId);
+
+                con.Open();
+                object result = command.ExecuteScalar();
+
+                if (result != null && result != DBNull.Value)
+                {
+                    laneId = Convert.ToInt32(result);
+                }
+            }
+
+            return laneId;
+        }
     }
 
 }

@@ -138,7 +138,7 @@ namespace BowlingData.DatabaseLayer
         {
             Price foundPrice;
             int tempID;
-            double tempNormalPrice¨;
+            double tempNormalPrice;
             string tempWeekDay;
             // Fetch values
             tempID = priceReader.GetInt32(priceReader.GetOrdinal("Id"));

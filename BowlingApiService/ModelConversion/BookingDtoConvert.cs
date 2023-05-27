@@ -34,6 +34,7 @@ namespace BowlingApiService.ModelConversion
             if (inBooking != null)
             {
                 aBookingReadDto = new BookingDto(inBooking.StartDateTime, inBooking.HoursToPlay, inBooking.NoOfPlayers, inBooking.Customer);
+                aBookingReadDto.Id = inBooking.Id;
                 aBookingReadDto.PriceId = inBooking.PriceId;
                 aBookingReadDto.LaneId = inBooking.LaneId;
             }

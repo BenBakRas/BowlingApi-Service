@@ -69,7 +69,7 @@ namespace BowlingApiService.BusinessLogicLayer
             return foundBookingDto;
         }
         public List<BookingDto>? Get()
-{
+ {
             List<BookingDto>? foundDtos;
             try
             {
@@ -150,17 +150,14 @@ namespace BowlingApiService.BusinessLogicLayer
                 {
                     insertedId = _bookingAccess.CreateBooking(foundBooking);
 
-                    // Create the price booking
-                    bool priceBookingCreated = _bookingAccess.CreatePriceBooking(newBooking.PriceId, insertedId);
-
-                    // Create the lane booking
-                    bool laneBookingCreated = _bookingAccess.CreateLaneBooking(newBooking.LaneId, insertedId);
-
-                    // Check if both price and lane bookings were created successfully
-                    if (!priceBookingCreated || !laneBookingCreated)
+                    if(insertedId != 0)
                     {
-                        // Handle the error, such as rolling back the database transaction or removing the created booking
-                        // Set insertedId to -1 or throw an exception to indicate a failure
+                        // Finds the day of the booking and mathces it with the weekday of price.
+                        string startDay = _bookingAccess.GetBookingStartDay(insertedId);
+                        int priceId = _bookingAccess.GetPriceIdByWeekday(startDay);
+                        foundBooking.PriceId = priceId;
+
+
                     }
                 }
             }

@@ -11,7 +11,7 @@ namespace BowlingApiService.Controllers
     {
         private readonly IBookingData _businessLogicCtrl;
 
-        public BookingsController(IBookingData inBusinessLogicCtrl)
+       public BookingsController(IBookingData inBusinessLogicCtrl)
         {
             _businessLogicCtrl = inBusinessLogicCtrl;
         }
@@ -42,33 +42,7 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-        /*// URL: api/bookings/{customerID}
-        [HttpGet("customer/{customerId}")]
-        public ActionResult<List<BookingDto>> GetBookingsByCustomerId(int customerId)
-        {
-            ActionResult<List<BookingDto>> foundReturn;
-            // retrieve data - converted to DTO
-            List<BookingDto>? foundBookings = _businessLogicCtrl.GetBookingsByCustomerId(customerId);
-            // evaluate
-            if (foundBookings != null)
-            {
-                if (foundBookings.Count > 0)
-                {
-                    foundReturn = Ok(foundBookings);                 // Statuscode 200
-                }
-                else
-                {
-                    foundReturn = new StatusCodeResult(204);    // Ok, but no content
-                }
-            }
-            else
-            {
-                foundReturn = new StatusCodeResult(500);        // Internal server error
-            }
 
-            return foundReturn;
-        }*/
-        
         // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
         public ActionResult<BookingDto> Get(int id)
@@ -80,6 +54,7 @@ namespace BowlingApiService.Controllers
             if (foundBooking != null)
             {
                 Response.Headers.Add("Id", foundBooking.Id.ToString());
+                Response.Headers.Add("PriceId", foundBooking.PriceId.ToString());
                 foundReturn = Ok(foundBooking);       // Statuscode 200
             }
             else

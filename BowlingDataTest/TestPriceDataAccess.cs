@@ -42,7 +42,7 @@ namespace BowlingDataTest
         public void TestCreatePrice()
         {
             // Arrange
-            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+            Price price = new Price(120.00, "Torsdag"); // Create a new Price object
 
             // Act
             int insertedId = _pAccess.CreatePrice(price);
@@ -57,7 +57,7 @@ namespace BowlingDataTest
         {
             // Arrange
             double actualNP = 120.00;
-            Price price = new Price(120.00, 150.00, "Torsdag"); // Insert the Price into the database
+            Price price = new Price(120.00, "Torsdag"); // Insert the Price into the database
             int insertedId = _pAccess.CreatePrice(price);
             // Act
             Price priceRetrived = _pAccess.GetPriceById(insertedId);
@@ -73,7 +73,7 @@ namespace BowlingDataTest
         public void TestDeletePriceById()
         {
             // Arrange
-            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+            Price price = new Price(120.00, "Torsdag"); // Create a new Price object
             int insertedId = _pAccess.CreatePrice(price); // Insert the Price into the database
 
             // Act
@@ -86,11 +86,11 @@ namespace BowlingDataTest
         public void TestUpdatePrice()
         {
             // Arrange
-            Price price = new Price(120.00, 150.00, "Torsdag"); // Create a new Price object
+            Price price = new Price(120.00, "Torsdag"); // Create a new Price object
             int insertedId = _pAccess.CreatePrice(price); // Insert the Price into the database
 
             // Modify the Price object
-            Price updatedPrice = new Price(insertedId, 130.00, 160.00, "Torsdag");
+            Price updatedPrice = new Price(insertedId, 130.00, "Torsdag");
 
             // Act
             bool isUpdated = _pAccess.UpdatePrice(updatedPrice);

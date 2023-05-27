@@ -15,8 +15,10 @@ namespace BowlingData.DatabaseLayer
         int CreateBooking(Booking aBooking);
         bool UpdateBooking(Booking BookingToUpdate);
         bool DeleteBookingById(int id);
-        bool CreatePriceBooking(int priceId, int bookingId);
         bool CreateLaneBooking(int laneId, int bookingId);
+        int GetPriceIdByWeekday(string weekday);
+        string GetBookingStartDay(int bookingId);
+        int GetLaneIdByBookingId(int bookingId);
 
     }
 }
