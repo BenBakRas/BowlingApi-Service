@@ -61,7 +61,7 @@ namespace BowlingData.DatabaseLayer
             List<Lane> foundLanes;
             Lane readLane;
             //
-            string queryString = "select Id, laneNumber from Lane";
+            string queryString = "SELECT Id, laneNumber FROM Lane";
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
@@ -78,6 +78,7 @@ namespace BowlingData.DatabaseLayer
             }
             return foundLanes;
         }
+
 
         public Lane GetLaneById(int id)
         {

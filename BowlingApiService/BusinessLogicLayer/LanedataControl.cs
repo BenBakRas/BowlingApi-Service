@@ -68,6 +68,15 @@ namespace BowlingApiService.BusinessLogicLayer
                
                 List<Lane>? foundLanes = _laneAcces.GetAllLanes();
                 foundDtos = ModelConversion.LaneDtoConvert.FromLaneCollection(foundLanes);
+                if(foundDtos != null )
+                {
+                    foreach(var dto in foundDtos)
+                    {
+                        Lane lane = _laneAcces.GetLaneById(dto.Id);
+                        dto.Id = lane.Id;
+                    }
+                }
+
             }
             catch
             {

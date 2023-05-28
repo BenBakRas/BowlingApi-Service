@@ -26,23 +26,24 @@ namespace BowlingApiService.Controllers
             {
                 if (foundLanes.Count > 0)
                 {
-                    foundReturn = Ok(foundLanes);                 // Statuscode 200
+                    // Remove the foreach loop that retrieves the lane by id
+
+                    foundReturn = Ok(foundLanes); // Statuscode 200
                 }
                 else
                 {
-                    foundReturn = new StatusCodeResult(204);    // Ok, but no content
+                    foundReturn = new StatusCodeResult(204); // Ok, but no content
                 }
             }
             else
             {
-                foundReturn = new StatusCodeResult(500);        // Internal server error
+                foundReturn = new StatusCodeResult(500); // Internal server error
             }
             // send response back to client
             return foundReturn;
         }
 
-
-        // URL: api/customers/{id}
+        // URL: api/lanes/{id}
         [HttpGet, Route("{id}")]
         public ActionResult<LaneDto> Get(int id)
         {
@@ -52,17 +53,19 @@ namespace BowlingApiService.Controllers
             // evaluate
             if (foundLane != null)
             {
-                foundReturn = Ok(foundLane);       // Statuscode 200
+                // Remove the unnecessary code that retrieves the lane by id
+
+                foundReturn = Ok(foundLane); // Statuscode 200
             }
             else
             {
-                foundReturn = new StatusCodeResult(404);    // Not found
+                foundReturn = new StatusCodeResult(404); // Not found
             }
             // send response back to client
             return foundReturn;
         }
 
-        // URL: api/customers
+        // URL: api/lanes
         [HttpPost]
         public ActionResult<int> PostNewLane(LaneDto inLaneDto)
         {
@@ -87,7 +90,7 @@ namespace BowlingApiService.Controllers
             }
             return foundReturn;
         }
-        // URL: api/customers/{id}
+        // URL: api/lanes/{id}
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

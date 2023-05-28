@@ -32,6 +32,7 @@ namespace BowlingApiService.ModelConversion
             if (inLanes != null)
             {
                 aLanesReadDto = new LaneDto(inLanes.LaneNumber);
+                aLanesReadDto.Id = inLanes.Id;
             }
             return aLanesReadDto;
         }

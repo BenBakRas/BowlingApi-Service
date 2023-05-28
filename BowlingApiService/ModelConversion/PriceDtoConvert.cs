@@ -32,6 +32,7 @@ namespace BowlingApiService.ModelConversion
             if (inPrice != null)
             {
                 priceDto = new PriceDto(inPrice.NormalPrice, inPrice.Weekday);
+                priceDto.Id = inPrice.Id;
             }
             return priceDto;
         }

@@ -2,6 +2,9 @@
 {
     public class PriceDto
     {
+        public int Id { get; set; }
+        public double? NormalPrice { get; set; }
+        public string? Weekday { get; set; }
 
         // Empty constructor
         public PriceDto() { }
@@ -12,7 +15,11 @@
             NormalPrice = normalPrice;
             Weekday = weekday;
         }
-        public double? NormalPrice { get; set; }
-        public string? Weekday { get; set; }
+        //Reuses constructor with id parameter
+        public PriceDto(int id, double? normalPrice, string? weekday) : this(normalPrice, weekday)
+        {
+            Id = id;
+        }
     }
 }
+
