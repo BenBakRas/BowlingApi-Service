@@ -136,6 +136,7 @@ namespace BowlingApiService.BusinessLogicLayer
                         // Finds the day of the booking and mathces it with the weekday of price.
                         string startDay = _bookingAccess.GetBookingStartDay(insertedId);
                         int priceId = _bookingAccess.GetPriceIdByWeekday(startDay);
+                        _bookingAccess.UpdateBookingPrice(insertedId, priceId);
                         foundBooking.PriceId = priceId;
 
 

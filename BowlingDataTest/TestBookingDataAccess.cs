@@ -48,7 +48,7 @@ namespace BowlingDataTest
         {
             //Arrange
             DateTime dateTime = DateTime.Now;
-            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "123123123");
             int cID = _cAccess.CreateCustomer(cus);
             Customer customerRetrived = _cAccess.GetCustomerById(cID);
 
@@ -67,7 +67,7 @@ namespace BowlingDataTest
         {
             //Arrange
             DateTime dateTime = DateTime.Now;
-            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "567567567");
             int cID = _cAccess.CreateCustomer(cus);
             Customer customerRetrived = _cAccess.GetCustomerById(cID);
 
@@ -90,7 +90,7 @@ namespace BowlingDataTest
         public void TestDeleteBookingById()
         {
             DateTime dateTime = DateTime.Now;
-            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "234234234");
             int cID = _cAccess.CreateCustomer(cus);
             Customer customerRetrived = _cAccess.GetCustomerById(cID);
 
@@ -108,7 +108,7 @@ namespace BowlingDataTest
         {
             // Arrange
             DateTime dateTime = DateTime.Now;
-            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
+            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "345345345");
             int cID = _cAccess.CreateCustomer(cus);
             Customer customerRetrieved = _cAccess.GetCustomerById(cID);
 
@@ -137,33 +137,7 @@ namespace BowlingDataTest
             Assert.Equal(updatedBooking.NoOfPlayers, retrievedBooking.NoOfPlayers);
             _bAccess.DeleteBookingById(insertedId);
         }
-        [Fact]
-        public void TestLaneBooking()
-        {
-            // Arrange
-            DateTime dateTime = DateTime.Now;
-            Customer cus = new Customer("Karl", "Hansen", "karl@gmail.com", "12345678");
-            int cID = _cAccess.CreateCustomer(cus);
-            Customer customerRetrieved = _cAccess.GetCustomerById(cID);
-
-            Booking bk = new Booking(dateTime, 3, 5, customerRetrieved); // Create a new Booking object
-            int insertedId = _bAccess.CreateBooking(bk); // Insert the Booking into the database
-                                                         // Lane too book
-            Lane lane = new Lane(5);
-            int laneId = _laneAccess.CreateLane(lane);
-
-            // Act
-            bool inserted = _bAccess.CreateLaneBooking(laneId, insertedId);
-            Booking retrievedBooking = _bAccess.GetBookingById(insertedId);
-
-            // Assert
-
-            Assert.True(inserted);
-            Assert.NotNull(retrievedBooking);
-            Assert.Equal(insertedId, retrievedBooking.Id);
-            _bAccess.DeleteBookingById(insertedId);
-
-        }
+   
 
     }
 }

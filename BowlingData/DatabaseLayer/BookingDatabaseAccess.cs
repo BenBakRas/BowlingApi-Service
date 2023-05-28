@@ -517,6 +517,22 @@ namespace BowlingData.DatabaseLayer
 
             return laneId;
         }
+        public bool UpdateBookingPrice(int bookingId, int newPriceId)
+        {
+            string updateString = "UPDATE Booking SET priceId = @NewPriceId WHERE Id = @BookingId";
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
+            {
+                updateCommand.Parameters.AddWithValue("@NewPriceId", newPriceId);
+                updateCommand.Parameters.AddWithValue("@BookingId", bookingId);
+
+                con.Open();
+                int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                return rowsAffected > 0;
+            }
+        }
     }
 
 }

@@ -22,6 +22,7 @@ namespace BowlingData.DatabaseLayer
         int GetPriceIdByWeekday(string weekday);
         string GetBookingStartDay(int bookingId);
         int GetLaneIdByBookingId(int bookingId);
+        bool UpdateBookingPrice(int bookingId, int newPriceId);
 
     }
 }
