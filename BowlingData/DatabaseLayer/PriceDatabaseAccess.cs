@@ -23,6 +23,7 @@ namespace BowlingData.DatabaseLayer
         {
             _connectionString = connectionString;
         }
+        //Method to create a price.
         public int CreatePrice(Price aPrice)
         {
             int insertedId = -1;
@@ -58,7 +59,7 @@ namespace BowlingData.DatabaseLayer
 
             return insertedId;
         }
-
+        //Method to delete a price
         public bool DeletePriceById(int id)
         {
             bool isDeleted = false;
@@ -77,7 +78,7 @@ namespace BowlingData.DatabaseLayer
 
             return isDeleted;
         }
-
+        //Method to get a list of all prices
         public List<Price> GetAllPrices()
         {
             List<Price> foundPrices;
@@ -100,7 +101,7 @@ namespace BowlingData.DatabaseLayer
             }
             return foundPrices;
         }
-
+        //Method to get a price by it's id
         public Price GetPriceById(int id)
         {
             Price foundPrice;
@@ -124,7 +125,7 @@ namespace BowlingData.DatabaseLayer
             }
             return foundPrice;
         }
-
+        //Method to update a price
         public bool UpdatePrice(Price priceToUpdate)
         {
             bool isUpdated = false;
@@ -162,7 +163,7 @@ namespace BowlingData.DatabaseLayer
 
             return isUpdated;
         }
-
+        //Method to create a price object from the sqldata
         private Price GetPriceFromReader(SqlDataReader priceReader)
         {
             Price foundPrice;

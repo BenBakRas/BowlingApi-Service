@@ -66,7 +66,7 @@ namespace BowlingData.DatabaseLayer
 
             return insertedId;
         }
-
+        //Method to delete a customer where we search on the id
         public bool DeleteCustomerById(int id)
         {
             bool isDeleted = false;
@@ -86,6 +86,7 @@ namespace BowlingData.DatabaseLayer
             return isDeleted;
         }
 
+        //Method to get a list of all customers.
         public List<Customer> GetAllCustomers()
         {
             List<Customer> foundCustomers;
@@ -108,7 +109,7 @@ namespace BowlingData.DatabaseLayer
             }
             return foundCustomers;
         }
-
+        //Method get a customer by it's ID
         public Customer GetCustomerById(int id)
         {
             Customer foundCustomer;
@@ -132,7 +133,7 @@ namespace BowlingData.DatabaseLayer
             }
             return foundCustomer;
         }
-
+        //Method to update a customer
         public bool UpdateCustomer(Customer customerToUpdate)
         {
             bool isUpdated = false;
@@ -180,6 +181,7 @@ namespace BowlingData.DatabaseLayer
                 }
             }
         }
+        //Method to create a customer from the sqldata
         private Customer GetCustomerFromReader(SqlDataReader customerReader)
         {
             Customer foundCustomer;
@@ -196,6 +198,7 @@ namespace BowlingData.DatabaseLayer
             return foundCustomer;
         }
 
+        //Method to get a customer by phone Number
         public Customer GetCustomerByPhone(string phone)
         {
             Customer foundCustomer;

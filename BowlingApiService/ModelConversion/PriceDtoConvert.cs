@@ -47,6 +47,7 @@ namespace BowlingApiService.ModelConversion
             }
             return price;
         }
+        // Convert from PriceDto object to Price object
         public static Price? ToPrice(PriceDto inDto, int idToUpdate)
         {
             Price? aPrice = null;

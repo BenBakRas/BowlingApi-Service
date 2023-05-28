@@ -54,7 +54,7 @@ namespace BowlingApiService.ModelConversion
             }
             return aBooking;
         }
-
+        // Convert from BookingDto object to Booking object
         public static Booking? ToBooking(BookingDto inDto)
         {
             Booking? aBooking = null;

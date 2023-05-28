@@ -26,6 +26,7 @@ namespace BowlingData.DatabaseLayer
             _connectionString = inConnectionString;
         }
 
+        // Constructor to create BookingDatabaseAccess object with IConfiguration parameter for connection string retrieval
         public int CreateBooking(Booking aBooking)
         {
             int insertedId = -1;
@@ -87,7 +88,7 @@ namespace BowlingData.DatabaseLayer
             return insertedId;
         }
 
-
+        // Method to delete a booking by its ID
         public bool DeleteBookingById(int id)
         {
             bool isDeleted = false;
@@ -135,6 +136,7 @@ namespace BowlingData.DatabaseLayer
             return isDeleted;
         }
 
+        //Method to get all bookings.
         public List<Booking> GetAllBookings()
         {
             List<Booking> foundBookings;
@@ -185,6 +187,7 @@ namespace BowlingData.DatabaseLayer
 
             return foundBookings;
         }
+        //Method to get a list of bookings searching on phone number.
         public List<Booking> GetBookingsByCustomerPhone(string phone)
         {
             List<Booking> bookings = new List<Booking>();
@@ -248,48 +251,8 @@ namespace BowlingData.DatabaseLayer
 
             return bookings;
         }
-        public List<Booking> GetBookingsByCId(int customerId)
-        {
-            List<Booking> bookings = new List<Booking>();
 
-            try
-            {
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                {
-                    string queryString = "SELECT * FROM Booking WHERE CustomerId = @CustomerId";
-                    SqlCommand command = new SqlCommand(queryString, con);
-                    command.Parameters.AddWithValue("@CustomerId", customerId);
-
-                    con.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        Booking booking = new Booking
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            StartDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime")),
-                            HoursToPlay = reader.GetInt32(reader.GetOrdinal("HoursToPlay")),
-                            NoOfPlayers = reader.GetInt32(reader.GetOrdinal("NoOfPlayers"))
-
-                        };
-                        Customer cus = GetCustomerById(customerId);
-                        booking.Customer = cus;
-                        bookings.Add(booking);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle the exception appropriately or log the error
-                Console.WriteLine($"An error occurred while retrieving bookings for customer ID {customerId}: {ex.Message}");
-                return null;
-            }
-
-            return bookings;
-        }
-
+        //Method to updateBooking
         public bool UpdateBooking(Booking bookingToUpdate)
         {
             bool isUpdated = false;
@@ -298,6 +261,7 @@ namespace BowlingData.DatabaseLayer
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand updateCommand = new SqlCommand(updateString, con))
             {
+                //Updating the booking details in the database
                 updateCommand.Parameters.AddWithValue("@Id", bookingToUpdate.Id);
                 updateCommand.Parameters.AddWithValue("@StartDateTime", bookingToUpdate.StartDateTime);
                 updateCommand.Parameters.AddWithValue("@HoursToPlay", bookingToUpdate.HoursToPlay);
@@ -312,7 +276,7 @@ namespace BowlingData.DatabaseLayer
 
             return isUpdated;
         }
-
+        //Crates a booking from the sql data.
         private Booking GetBookingFromReader(SqlDataReader bookingReader)
         {
             int customerId = bookingReader.GetInt32(bookingReader.GetOrdinal("CustomerID"));
@@ -329,6 +293,7 @@ namespace BowlingData.DatabaseLayer
             return foundBooking;
         }
 
+        //private method to find a customer by searching on the customer's ID
         private Customer GetCustomerById(int customerId)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
@@ -353,6 +318,8 @@ namespace BowlingData.DatabaseLayer
 
             return null; // Customer not found
         }
+
+        //Method to create the LaneBookign that gets posted to sql.
         public bool CreateLaneBooking(int laneId, int bookingId, SqlTransaction transaction)
         {
             bool isCreated = false;
@@ -369,6 +336,7 @@ namespace BowlingData.DatabaseLayer
 
             return isCreated;
         }
+        //Method to find a booking by ID
         public Booking GetBookingById(int id)
         {
             string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, p.Id AS PriceId
@@ -413,6 +381,7 @@ namespace BowlingData.DatabaseLayer
             return null; // Return null if no booking is found
         }
 
+        //Method to check if a lane is available for that day and time.
         private bool IsLaneAvailable(DateTime startDateTime, int hoursToPlay, out int availableLaneId)
         {
             DateTime endDateTime = startDateTime.AddHours(hoursToPlay);

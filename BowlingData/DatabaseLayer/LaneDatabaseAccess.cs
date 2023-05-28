@@ -19,7 +19,7 @@ namespace BowlingData.DatabaseLayer
         {
             _connectionString = inConnectionString;
         }
-
+        //Method to create a lane
         public int CreateLane(Lane aLane)
         {
             int insertedId = -1;
@@ -36,7 +36,7 @@ namespace BowlingData.DatabaseLayer
             }
             return insertedId;
         }
-
+        //Method to delete a lane by it's Id
         public bool DeleteLaneById(int id)
         {
             bool isDeleted = false;
@@ -55,7 +55,7 @@ namespace BowlingData.DatabaseLayer
 
             return isDeleted;
         }
-
+        //Method to get a list of all the lanes.
         public List<Lane> GetAllLanes()
         {
             List<Lane> foundLanes;
@@ -79,7 +79,7 @@ namespace BowlingData.DatabaseLayer
             return foundLanes;
         }
 
-
+        //Method to find a lane på it's Id
         public Lane GetLaneById(int id)
         {
             Lane foundLane;
@@ -104,7 +104,7 @@ namespace BowlingData.DatabaseLayer
             return foundLane;
 
         }
-
+        //Method to update a lane.
         public bool UpdateLane(Lane laneToUpdate)
         {
             bool isUpdated = false;
@@ -129,7 +129,7 @@ namespace BowlingData.DatabaseLayer
                 }
             }
         }
-
+        //Method to create a lane object form the sqlData
         private Lane GetLaneFromReader(SqlDataReader laneReader) 
         {
             Lane foundLane;
