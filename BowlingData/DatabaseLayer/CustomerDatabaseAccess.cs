@@ -25,25 +25,45 @@ namespace BowlingData.DatabaseLayer
         public int CreateCustomer(Customer aCustomer)
         {
             int insertedId = -1;
-            //
             string insertString = "insert into Customer(firstName, lastName, email, phone) OUTPUT INSERTED.ID values(@FirstName, @LastName, @Email, @Phone)";
+
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand CreateCommand = new SqlCommand(insertString, con))
             {
-                // Prepace SQL
-                SqlParameter fNameParam = new("@FirstName", aCustomer.FirstName);
-                CreateCommand.Parameters.Add(fNameParam);
-                SqlParameter lNameParam = new("@LastName", aCustomer.LastName);
-                CreateCommand.Parameters.Add(lNameParam);
-                SqlParameter EmailParam = new("@Email", aCustomer.Email);
-                CreateCommand.Parameters.Add(EmailParam);
-                SqlParameter phoneParam = new("Phone", aCustomer.Phone);
-                CreateCommand.Parameters.Add(phoneParam);
-                //
                 con.Open();
-                // Execute save and read generated key (ID)
-                insertedId = (int)CreateCommand.ExecuteScalar();
+
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand createCommand = new SqlCommand(insertString, con, transaction))
+                        {
+                            // Prepare SQL
+                            SqlParameter fNameParam = new SqlParameter("@FirstName", aCustomer.FirstName);
+                            createCommand.Parameters.Add(fNameParam);
+                            SqlParameter lNameParam = new SqlParameter("@LastName", aCustomer.LastName);
+                            createCommand.Parameters.Add(lNameParam);
+                            SqlParameter emailParam = new SqlParameter("@Email", aCustomer.Email);
+                            createCommand.Parameters.Add(emailParam);
+                            SqlParameter phoneParam = new SqlParameter("@Phone", aCustomer.Phone);
+                            createCommand.Parameters.Add(phoneParam);
+
+                            // Execute save and read generated key (ID)
+                            insertedId = (int)createCommand.ExecuteScalar();
+                        }
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
+
             return insertedId;
         }
 
@@ -119,27 +139,46 @@ namespace BowlingData.DatabaseLayer
             string updateString = "UPDATE Customer SET firstName = @FirstName, lastName = @LastName, email = @Email, phone = @Phone WHERE id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
             {
-                updateCommand.Parameters.AddWithValue("@Id", customerToUpdate.Id);
-                updateCommand.Parameters.AddWithValue("@FirstName", customerToUpdate.FirstName);
-                updateCommand.Parameters.AddWithValue("@LastName", customerToUpdate.LastName);
-                updateCommand.Parameters.AddWithValue("@Email", customerToUpdate.Email);
-                updateCommand.Parameters.AddWithValue("@Phone", customerToUpdate.Phone);
-
                 con.Open();
-                int rowsAffected = updateCommand.ExecuteNonQuery();
 
-                if(isUpdated = (rowsAffected > 0))
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
                 {
-                    return isUpdated;
-                }
-                else
-                {
-                    return false; 
+                    try
+                    {
+                        using (SqlCommand updateCommand = new SqlCommand(updateString, con, transaction))
+                        {
+                            updateCommand.Parameters.AddWithValue("@Id", customerToUpdate.Id);
+                            updateCommand.Parameters.AddWithValue("@FirstName", customerToUpdate.FirstName);
+                            updateCommand.Parameters.AddWithValue("@LastName", customerToUpdate.LastName);
+                            updateCommand.Parameters.AddWithValue("@Email", customerToUpdate.Email);
+                            updateCommand.Parameters.AddWithValue("@Phone", customerToUpdate.Phone);
+
+                            int rowsAffected = updateCommand.ExecuteNonQuery();
+
+                            if (isUpdated = (rowsAffected > 0))
+                            {
+                                // Commit the transaction
+                                transaction.Commit();
+                                return isUpdated;
+                            }
+                            else
+                            {
+                                // No rows affected, rollback the transaction
+                                transaction.Rollback();
+                                return false;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
-            
         }
         private Customer GetCustomerFromReader(SqlDataReader customerReader)
         {

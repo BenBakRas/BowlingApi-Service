@@ -15,25 +15,6 @@ namespace BowlingApiService.BusinessLogicLayer
         {
             _bookingAccess = inBookingAccess;
         }
-        /*
-        public int Add(BookingDto newBooking)
-        {
-            int insertedId = 0;
-            try
-            {
-                Booking? foundBooking = ModelConversion.BookingDtoConvert.ToBooking(newBooking);
-                if (foundBooking != null)
-                {
-                    insertedId = _bookingAccess.CreateBooking(foundBooking);
-                }
-            }
-            catch
-            {
-                insertedId = -1;
-            }
-            return insertedId;
-        }
-        */
         public bool Delete(int id)
         {
             try

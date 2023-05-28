@@ -1,9 +1,12 @@
 ﻿using BowlingData.ModelLayer;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace BowlingData.DatabaseLayer
 {
@@ -15,7 +18,7 @@ namespace BowlingData.DatabaseLayer
         int CreateBooking(Booking aBooking);
         bool UpdateBooking(Booking BookingToUpdate);
         bool DeleteBookingById(int id);
-        bool CreateLaneBooking(int laneId, int bookingId);
+        bool CreateLaneBooking(int laneId, int bookingId, SqlTransaction transaction);
         int GetPriceIdByWeekday(string weekday);
         string GetBookingStartDay(int bookingId);
         int GetLaneIdByBookingId(int bookingId);

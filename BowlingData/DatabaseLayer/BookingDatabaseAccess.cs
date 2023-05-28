@@ -69,6 +69,9 @@ namespace BowlingData.DatabaseLayer
                         // Execute the insert command within the transaction and retrieve the inserted booking ID
                         insertedId = (int)createBookingCommand.ExecuteScalar();
 
+                        // Insert the lane ID into the LaneBooking table within the transaction
+                        CreateLaneBooking(availableLaneId, insertedId, transaction);
+
                         // Commit the transaction
                         transaction.Commit();
                     }
@@ -78,28 +81,55 @@ namespace BowlingData.DatabaseLayer
                         transaction.Rollback();
                         throw;
                     }
-                    // Insert the lane ID into the LaneBooking table
-                    CreateLaneBooking(availableLaneId, insertedId);
                 }
             }
 
             return insertedId;
         }
 
+
         public bool DeleteBookingById(int id)
         {
             bool isDeleted = false;
-            string deleteString = "DELETE FROM Booking WHERE id = @Id";
+            string deleteLaneBookingString = "DELETE FROM LaneBooking WHERE BookingId = @Id";
+            string deleteBookingString = "DELETE FROM Booking WHERE id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand deleteCommand = new SqlCommand(deleteString, con))
             {
-                deleteCommand.Parameters.AddWithValue("@Id", id);
-
                 con.Open();
-                int rowsAffected = deleteCommand.ExecuteNonQuery();
 
-                isDeleted = (rowsAffected > 0);
+                using (SqlCommand deleteLaneBookingCommand = new SqlCommand(deleteLaneBookingString, con))
+                using (SqlCommand deleteBookingCommand = new SqlCommand(deleteBookingString, con))
+                {
+                    deleteLaneBookingCommand.Parameters.AddWithValue("@Id", id);
+                    deleteBookingCommand.Parameters.AddWithValue("@Id", id);
+
+                    using (SqlTransaction transaction = con.BeginTransaction())
+                    {
+                        try
+                        {
+                            deleteLaneBookingCommand.Transaction = transaction;
+                            int rowsAffectedLaneBooking = deleteLaneBookingCommand.ExecuteNonQuery();
+
+                            deleteBookingCommand.Transaction = transaction;
+                            int rowsAffectedBooking = deleteBookingCommand.ExecuteNonQuery();
+
+                            if (rowsAffectedLaneBooking > 0 && rowsAffectedBooking > 0)
+                            {
+                                transaction.Commit();
+                                isDeleted = true;
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            transaction.Rollback();
+                        }
+                    }
+                }
             }
 
             return isDeleted;
@@ -112,23 +142,44 @@ namespace BowlingData.DatabaseLayer
             string queryString = "select id, hoursToPlay, startDateTime, noOfPlayers, customerID from Booking";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand readCommand = new SqlCommand(queryString, con))
             {
                 con.Open();
-                SqlDataReader bookingReader = readCommand.ExecuteReader();
-                foundBookings = new List<Booking>();
 
-                while (bookingReader.Read())
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
                 {
-                    readBooking = GetBookingFromReader(bookingReader);
-                    //Finds the priceID and laneID
-                    string startDay = GetBookingStartDay(readBooking.Id);
-                    int priceID = GetPriceIdByWeekday(startDay);
-                    int laneID = GetLaneIdByBookingId(readBooking.Id);
-                    //Adds the id's to the booking.
-                    readBooking.LaneId = laneID;
-                    readBooking.PriceId = priceID;
-                    foundBookings.Add(readBooking);
+                    try
+                    {
+                        using (SqlCommand readCommand = new SqlCommand(queryString, con, transaction))
+                        {
+                            SqlDataReader bookingReader = readCommand.ExecuteReader();
+                            foundBookings = new List<Booking>();
+
+                            while (bookingReader.Read())
+                            {
+                                readBooking = GetBookingFromReader(bookingReader);
+                                //Finds the priceID and laneID
+                                string startDay = GetBookingStartDay(readBooking.Id);
+                                int priceID = GetPriceIdByWeekday(startDay);
+                                int laneID = GetLaneIdByBookingId(readBooking.Id);
+                                //Adds the id's to the booking.
+                                readBooking.LaneId = laneID;
+                                readBooking.PriceId = priceID;
+                                foundBookings.Add(readBooking);
+                            }
+                            bookingReader.Close(); // Close the DataReader
+                        }
+
+                        // Commit the transaction
+                        
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
 
@@ -143,31 +194,48 @@ namespace BowlingData.DatabaseLayer
                 using (SqlConnection con = new SqlConnection(_connectionString))
                 {
                     string queryString = "SELECT b.*, c.* FROM Booking b INNER JOIN Customer c ON b.CustomerID = c.id WHERE phone = @Phone";
-                    SqlCommand command = new SqlCommand(queryString, con);
-                    command.Parameters.AddWithValue("@Phone", phone);
 
-                    con.Open();
-
-                    SqlDataReader reader = command.ExecuteReader();
-
-                    while (reader.Read())
+                    // Start a transaction to handle concurrency
+                    using (SqlTransaction transaction = con.BeginTransaction())
                     {
-                        Booking booking = new Booking
+                        try
                         {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            StartDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime")),
-                            HoursToPlay = reader.GetInt32(reader.GetOrdinal("HoursToPlay")),
-                            NoOfPlayers = reader.GetInt32(reader.GetOrdinal("NoOfPlayers")),
-                            Customer = new Customer
+                            SqlCommand command = new SqlCommand(queryString, con, transaction);
+                            command.Parameters.AddWithValue("@Phone", phone);
+
+                            con.Open();
+
+                            SqlDataReader reader = command.ExecuteReader();
+
+                            while (reader.Read())
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("customerID")),
-                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                                LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                                Email = reader.GetString(reader.GetOrdinal("Email")),
-                                Phone = reader.GetString(reader.GetOrdinal("Phone"))
+                                Booking booking = new Booking
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                    StartDateTime = reader.GetDateTime(reader.GetOrdinal("StartDateTime")),
+                                    HoursToPlay = reader.GetInt32(reader.GetOrdinal("HoursToPlay")),
+                                    NoOfPlayers = reader.GetInt32(reader.GetOrdinal("NoOfPlayers")),
+                                    Customer = new Customer
+                                    {
+                                        Id = reader.GetInt32(reader.GetOrdinal("customerID")),
+                                        FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                        LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                                        Email = reader.GetString(reader.GetOrdinal("Email")),
+                                        Phone = reader.GetString(reader.GetOrdinal("Phone"))
+                                    }
+                                };
+                                bookings.Add(booking);
                             }
-                        };
-                        bookings.Add(booking);
+
+                            // Commit the transaction
+                            transaction.Commit();
+                        }
+                        catch (Exception)
+                        {
+                            // An error occurred, rollback the transaction
+                            transaction.Rollback();
+                            throw;
+                        }
                     }
                 }
             }
@@ -285,20 +353,17 @@ namespace BowlingData.DatabaseLayer
 
             return null; // Customer not found
         }
-        public bool CreateLaneBooking(int laneId, int bookingId)
+        public bool CreateLaneBooking(int laneId, int bookingId, SqlTransaction transaction)
         {
             bool isCreated = false;
             string insertString = "INSERT INTO LaneBooking (LaneId, BookingId) VALUES (@LaneId, @BookingId)";
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand createCommand = new SqlCommand(insertString, con))
+            using (SqlCommand createCommand = new SqlCommand(insertString, transaction.Connection, transaction))
             {
                 createCommand.Parameters.AddWithValue("@LaneId", laneId);
                 createCommand.Parameters.AddWithValue("@BookingId", bookingId);
 
-                con.Open();
                 int rowsAffected = createCommand.ExecuteNonQuery();
-
                 isCreated = (rowsAffected > 0);
             }
 

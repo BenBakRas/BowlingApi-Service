@@ -26,19 +26,36 @@ namespace BowlingData.DatabaseLayer
         public int CreatePrice(Price aPrice)
         {
             int insertedId = -1;
-            //
-            string insertString = "insert into Price(normalPrice, weekday) OUTPUT INSERTED.ID values(@NormalPrice, @Weekday)";
+            string insertString = "INSERT INTO Price (NormalPrice, Weekday) OUTPUT INSERTED.ID VALUES (@NormalPrice, @Weekday)";
+
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand CreateCommand = new SqlCommand(insertString, con))
             {
-                SqlParameter aNPParam = new("@NormalPrice", aPrice.NormalPrice);
-                CreateCommand.Parameters.Add(aNPParam);
-                SqlParameter aWDParam = new("@weekday", aPrice.Weekday);
-                CreateCommand.Parameters.Add(aWDParam);
                 con.Open();
-                // Execute save and read generated key (ID)
-                insertedId = (int)CreateCommand.ExecuteScalar();
+
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
+                {
+                    try
+                    {
+                        // Set the transaction for the command
+                        SqlCommand createCommand = new SqlCommand(insertString, con, transaction);
+                        createCommand.Parameters.AddWithValue("@NormalPrice", aPrice.NormalPrice);
+                        createCommand.Parameters.AddWithValue("@Weekday", aPrice.Weekday);
+
+                        insertedId = (int)createCommand.ExecuteScalar();
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
+
             return insertedId;
         }
 
@@ -111,27 +128,39 @@ namespace BowlingData.DatabaseLayer
         public bool UpdatePrice(Price priceToUpdate)
         {
             bool isUpdated = false;
-            string updateString = "UPDATE Price SET NormalPrice = @NormalPrice, Weekday = @Weekday WHERE id = @Id";
+            string updateString = "UPDATE Price SET NormalPrice = @NormalPrice, Weekday = @Weekday WHERE Id = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand updateCommand = new SqlCommand(updateString, con))
             {
-                updateCommand.Parameters.AddWithValue("@Id", priceToUpdate.Id);
-                updateCommand.Parameters.AddWithValue("@NormalPrice", priceToUpdate.NormalPrice);
-                updateCommand.Parameters.AddWithValue("@Weekday", priceToUpdate.Weekday);
-
                 con.Open();
-                int rowsAffected = updateCommand.ExecuteNonQuery();
 
-                if (isUpdated = (rowsAffected > 0))
+                // Start a transaction to handle concurrency
+                using (SqlTransaction transaction = con.BeginTransaction())
                 {
-                    return isUpdated;
-                }
-                else
-                {
-                    return false;
+                    try
+                    {
+                        // Set the transaction for the command
+                        SqlCommand updateCommand = new SqlCommand(updateString, con, transaction);
+                        updateCommand.Parameters.AddWithValue("@Id", priceToUpdate.Id);
+                        updateCommand.Parameters.AddWithValue("@NormalPrice", priceToUpdate.NormalPrice);
+                        updateCommand.Parameters.AddWithValue("@Weekday", priceToUpdate.Weekday);
+
+                        int rowsAffected = updateCommand.ExecuteNonQuery();
+                        isUpdated = (rowsAffected > 0);
+
+                        // Commit the transaction
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        // An error occurred, rollback the transaction
+                        transaction.Rollback();
+                        throw;
+                    }
                 }
             }
+
+            return isUpdated;
         }
 
         private Price GetPriceFromReader(SqlDataReader priceReader)
