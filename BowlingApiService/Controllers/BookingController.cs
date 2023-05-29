@@ -1,5 +1,6 @@
 ﻿using BowlingApiService.BusinessLogicLayer;
 using BowlingApiService.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace BowlingApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class BookingsController : ControllerBase
     {
         private readonly IBookingData _businessLogicCtrl;
@@ -152,6 +154,7 @@ namespace BowlingApiService.Controllers
                 return StatusCode(500); // Internal server error
             }
         }
+
         // URL: api/bookings/customer/phone/{phoneNumber}
         [HttpGet("customer/phone/{phoneNumber}")]
         public ActionResult<List<BookingDto>> GetBookingsByCustomerPhone(string phoneNumber)

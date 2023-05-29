@@ -58,8 +58,8 @@ namespace BowlingApiService.Controllers
                 { "email", "smithtest@tesst.com" },
                 { "granttype", grantType },
                 { "exp", ts },
-                { "iss", "https://localhost:7150" }, // Issuer - the party that generates the JWT
-                { "aud", "https://localhost:7150" }  // Audience - The address of the resource
+                { "iss", "https://localhost:7197" }, // Issuer - the party that generates the JWT
+                { "aud", "https://localhost:7197" }  // Audience - The address of the resource
             };
 
             JwtSecurityToken secToken = new JwtSecurityToken(header, payload);
