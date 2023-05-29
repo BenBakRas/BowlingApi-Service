@@ -198,6 +198,8 @@ namespace BowlingData.DatabaseLayer
                 {
                     string queryString = "SELECT b.*, c.* FROM Booking b INNER JOIN Customer c ON b.CustomerID = c.id WHERE phone = @Phone";
 
+                    con.Open(); 
+
                     // Start a transaction to handle concurrency
                     using (SqlTransaction transaction = con.BeginTransaction())
                     {
@@ -205,8 +207,6 @@ namespace BowlingData.DatabaseLayer
                         {
                             SqlCommand command = new SqlCommand(queryString, con, transaction);
                             command.Parameters.AddWithValue("@Phone", phone);
-
-                            con.Open();
 
                             SqlDataReader reader = command.ExecuteReader();
 
@@ -229,7 +229,7 @@ namespace BowlingData.DatabaseLayer
                                 };
                                 bookings.Add(booking);
                             }
-
+                            reader.Close();
                             // Commit the transaction
                             transaction.Commit();
                         }
@@ -339,12 +339,12 @@ namespace BowlingData.DatabaseLayer
         //Method to find a booking by ID
         public Booking GetBookingById(int id)
         {
-            string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, p.Id AS PriceId
-                           FROM Booking AS b
-                           JOIN LaneBooking AS lb ON b.Id = lb.BookingId
-                           JOIN Customer AS c ON b.customerID = c.Id
-                           JOIN Price AS p ON p.Weekday = DATENAME(WEEKDAY, b.startDateTime)
-                           WHERE b.Id = @Id";
+            string queryString = @"SELECT b.Id, b.hoursToPlay, b.startDateTime, b.noOfPlayers, c.Id AS CustomerId, c.FirstName, c.LastName, c.Email, c.Phone, lb.LaneId, b.PriceId
+                                FROM Booking AS b
+                                JOIN LaneBooking AS lb ON b.Id = lb.BookingId
+                                JOIN Customer AS c ON b.CustomerId = c.Id
+                                WHERE b.Id = @Id";
+
 
             using (SqlConnection con = new SqlConnection(_connectionString))
             using (SqlCommand readCommand = new SqlCommand(queryString, con))
