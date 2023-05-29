@@ -20,6 +20,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/bookings
         [HttpGet]
+        [Authorize]
         public ActionResult<List<BookingDto>> Get()
         {
             ActionResult<List<BookingDto>> foundReturn;
@@ -47,6 +48,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
+        [Authorize]
         public ActionResult<BookingDto> Get(int id)
         {
             ActionResult<BookingDto> foundReturn;
@@ -106,6 +108,7 @@ namespace BowlingApiService.Controllers
         }
         // URL: api/bookings/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             ActionResult foundReturn;
@@ -123,6 +126,7 @@ namespace BowlingApiService.Controllers
             return foundReturn;
         }
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult Put(int id, [FromBody] BookingDto updatedBookingDto)
         {
             if (updatedBookingDto == null)

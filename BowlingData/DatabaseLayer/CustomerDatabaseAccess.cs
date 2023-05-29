@@ -70,18 +70,32 @@ namespace BowlingData.DatabaseLayer
         public bool DeleteCustomerById(int id)
         {
             bool isDeleted = false;
-            string deleteString = "DELETE FROM Customer WHERE id = @Id";
+
+            // Delete bookings associated with the customer
+            string deleteBookingsString = "DELETE FROM Booking WHERE customerID = @Id";
 
             using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand deleteCommand = new SqlCommand(deleteString, con))
             {
-                deleteCommand.Parameters.AddWithValue("@Id", id);
-
                 con.Open();
-                int rowsAffected = deleteCommand.ExecuteNonQuery();
 
-                isDeleted = (rowsAffected > 0);
+                using (SqlCommand deleteBookingsCommand = new SqlCommand(deleteBookingsString, con))
+                {
+                    deleteBookingsCommand.Parameters.AddWithValue("@Id", id);
+
+                    deleteBookingsCommand.ExecuteNonQuery();
                 }
+
+                // Delete the customer
+                string deleteCustomerString = "DELETE FROM Customer WHERE id = @Id";
+
+                using (SqlCommand deleteCustomerCommand = new SqlCommand(deleteCustomerString, con))
+                {
+                    deleteCustomerCommand.Parameters.AddWithValue("@Id", id);
+
+                    int rowsAffected = deleteCustomerCommand.ExecuteNonQuery();
+                    isDeleted = (rowsAffected > 0);
+                }
+            }
 
             return isDeleted;
         }

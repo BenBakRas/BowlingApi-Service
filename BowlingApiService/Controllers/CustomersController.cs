@@ -8,7 +8,7 @@ namespace BowlingApiService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerData _businessLogicCtrl;
@@ -20,6 +20,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/customers
         [HttpGet]
+        [Authorize]
         public ActionResult<List<CustomerDto>> Get()
         {
             ActionResult<List<CustomerDto>> foundReturn;
@@ -72,6 +73,7 @@ namespace BowlingApiService.Controllers
         }
         // URL: api/customers/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             ActionResult foundReturn;
@@ -90,6 +92,7 @@ namespace BowlingApiService.Controllers
         }
         // URL: api/customers/{id}
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult Put(int id, [FromBody] CustomerDto updatedCustomerDto)
         {
             
