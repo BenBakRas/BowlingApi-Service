@@ -16,7 +16,7 @@ namespace BowlingApiService.Controllers
         {
             _businessLogicCtrl = inBusinessLogicCtrl;
         }
-
+        //
         // URL: api/prices
         [HttpGet]
         public ActionResult<List<PriceDto>> Get()
