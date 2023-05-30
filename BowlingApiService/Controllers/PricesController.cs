@@ -2,6 +2,7 @@
 using BowlingApiService.BusinessLogicLayer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BowlingApiService.Controllers
 {
@@ -42,9 +43,10 @@ namespace BowlingApiService.Controllers
             // send response back to client
             return foundReturn;
         }
-
+        
         // URL: api/prices/{id}
         [HttpGet, Route("{id}")]
+        [Authorize]
         public ActionResult<PriceDto> Get(int id)
         {
             ActionResult<PriceDto> foundReturn;
@@ -65,6 +67,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/prices
         [HttpPost]
+        [Authorize]
         public ActionResult<int> PostNewPrice(PriceDto inPriceDto)
         {
             ActionResult<int> foundReturn;
@@ -91,6 +94,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/prices/{id}
         [HttpDelete("{id}")]
+        [Authorize]
         public ActionResult Delete(int id)
         {
             ActionResult foundReturn;
@@ -110,6 +114,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/prices/{id}
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult Put(int id, [FromBody] PriceDto updatedPriceDto)
         {
             if (updatedPriceDto == null)
