@@ -48,7 +48,7 @@ namespace BowlingApiService.Controllers
 
         // URL: api/bookings/{id}
         [HttpGet, Route("{id}")]
-        [Authorize]
+        
         public ActionResult<BookingDto> Get(int id)
         {
             ActionResult<BookingDto> foundReturn;
